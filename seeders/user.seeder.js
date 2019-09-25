@@ -1,12 +1,11 @@
-import { Seeder } from 'mongoose-data-seed'
-import { User } from '~/server/api/models'
+const { Seeder } = require('mongoose-data-seed')
+const { User } = require('../server/api/models')
 
 
 const data = [
   {
-    email: 'test@gmail.com',
-    password: 'password',
-    passwordConfirmation: 'password'
+    email: 'test@mail.com',
+    password: 'password'
   }
 ]
 
@@ -22,4 +21,4 @@ class UserSeeder extends Seeder {
   }
 }
 
-export default UserSeeder
+module.exports = UserSeeder
