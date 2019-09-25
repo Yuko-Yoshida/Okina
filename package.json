@@ -5,7 +5,7 @@
   "author": "Yuko_Yoshida",
   "private": true,
   "scripts": {
-    "test": "jest",
+    "test": "NODE_ENV=development jest",
     "dev": "NODE_ENV=development nodemon server/index.js --watch server",
     "build": "nuxt build",
     "start": "NODE_ENV=production node server/index.js",
@@ -30,8 +30,9 @@
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "^24.1.0",
     "jest": "^24.1.0",
-    "vue-jest": "^3.0.3",
-    "nodemon": "^1.18.9"
+    "nodemon": "^1.18.9",
+    "supertest": "^4.0.2",
+    "vue-jest": "^3.0.3"
   },
   "mdSeed": {
     "seedersFolder": "./seeders"

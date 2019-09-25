@@ -11,17 +11,18 @@ router.post('/', (req, res) => {
   const email = req.body.email
   const password = req.body.password
 
-  User.find({ email: email }, (err, user) => {
-    if (err) res.status(400).send()
+  User.findOne({ email: email }, (err, user) => {
+    if (err) return res.status(400).send()
+    if (user == null) return res.status(401).send()
 
-    user.comparePassword(password, (err, isMatch) => {
-      if (err) res.status(400).send()
-      if (!isMatch) res.status(401).send()
+    return user.comparePassword(password, (err, isMatch) => {
+      if (err) return res.status(400).send()
+      if (!isMatch) return res.status(401).send()
 
       const privateKey = fs.readFileSync(env.private_key)
       const token = jwt.sign({ email: user.email }, privateKey)
 
-      res.status(200).json({ 'token': token })
+      return res.status(200).json({ 'token': token })
     })
   })
 })
