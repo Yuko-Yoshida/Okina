@@ -1,5 +1,4 @@
-const homedir = require('os').homedir()
-
+const homedir = require('os').homedir();
 
 module.exports = {
   mongo_url: 'mongodb://localhost:27017/okina',

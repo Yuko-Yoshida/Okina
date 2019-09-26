@@ -22,7 +22,7 @@ router.post('/', (req, res) => {
       const privateKey = fs.readFileSync(env.private_key)
       const token = jwt.sign({ email: user.email }, privateKey)
 
-      return res.status(200).json({ 'token': token })
+      return res.status(200).json({ 'token': 'JWT '+token })
     })
   })
 })

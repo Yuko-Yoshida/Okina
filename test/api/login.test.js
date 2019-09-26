@@ -3,6 +3,8 @@ const app = require('../../server/api')
 const request = require('supertest')
 
 app.use(express.json())
+app.use(express.urlencoded({ extended: true }));
+
 
 
 describe('api/login.js', () => {

@@ -3,7 +3,7 @@ const environment = process.env.NODE_ENV || 'development'
 const env = require(`../../../env.${environment}.js`)
 
 
-mongoose.connect('mongodb://localhost/sake')
+mongoose.connect(env.mongo_url)
 
 const UserSchema = require('./user')
 
