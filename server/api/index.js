@@ -26,7 +26,7 @@ passport.use(new JWTStrategy(opts, (jwtPayload, done) => {
     return done('Invalid JWT Payload', false)
   }
   else {
-    return done(undefined, true)
+    return done(undefined, jwtPayload)
   }
 }))
 
