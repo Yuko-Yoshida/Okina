@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 
 const User = require('./seeders/user.seeder')
+const Artist = require('./seeders/artist.seeder')
 
 const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017/okina'
 
@@ -10,7 +11,8 @@ const mongoURL = process.env.MONGO_URL || 'mongodb://localhost:27017/okina'
  * @type {Object}
  */
 const seedersList = {
-  User
+  User,
+  Artist,
 }
 /**
  * Connect to mongodb implementation

@@ -8,7 +8,7 @@ app.use(express.urlencoded({ extended: true }))
 
 function getToken(query) {
   return request(app)
-          .post('/api/v1/login')
+          .post('/api/v2/login')
           .send(query)
           .set('Content-Type', 'application/json')
           .set('Accept', 'application/json')
@@ -24,7 +24,7 @@ describe('api/user.js', () => {
       'newPassword': 'password'
     }
     return request(app)
-      .put('/api/v1/user')
+      .put('/api/v2/user')
       .send(param)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
@@ -43,7 +43,7 @@ describe('api/user.js', () => {
       'newPassword': 'password'
     }
     return request(app)
-      .put('/api/v1/user')
+      .put('/api/v2/user')
       .send(param)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
@@ -62,7 +62,7 @@ describe('api/user.js', () => {
       'newPassword': 'password'
     }
     return request(app)
-      .put('/api/v1/user')
+      .put('/api/v2/user')
       .send(param)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
@@ -81,7 +81,7 @@ describe('api/user.js', () => {
       'newPassword': ''
     }
     return request(app)
-      .put('/api/v1/user')
+      .put('/api/v2/user')
       .send(param)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
@@ -100,7 +100,7 @@ describe('api/user.js', () => {
       'newPassword': 'pass'
     }
     return request(app)
-      .put('/api/v1/user')
+      .put('/api/v2/user')
       .send(param)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
@@ -126,7 +126,7 @@ describe('api/user.js', () => {
       'newPassword': 'pass'
     }
     return request(app)
-      .put('/api/v1/user')
+      .put('/api/v2/user')
       .send(param)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')
@@ -152,7 +152,7 @@ describe('api/user.js', () => {
       'newPassword': 'password'
     }
     return request(app)
-      .put('/api/v1/user')
+      .put('/api/v2/user')
       .send(param)
       .set('Content-Type', 'application/json')
       .set('Accept', 'application/json')

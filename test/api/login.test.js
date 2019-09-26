@@ -9,20 +9,20 @@ app.use(express.urlencoded({ extended: true }));
 
 describe('api/login.js', () => {
   test('Worng method GET', () =>{
-    return request(app).get('/api/v1/login').expect(404)
+    return request(app).get('/api/v2/login').expect(404)
   })
   test('Worng method PUT', () =>{
-    return request(app).put('/api/v1/login').expect(404)
+    return request(app).put('/api/v2/login').expect(404)
   })
   test('Worng method DELETE', () =>{
-    return request(app).delete('/api/v1/login').expect(404)
+    return request(app).delete('/api/v2/login').expect(404)
   })
   test('POST with no data', () =>{
-    return request(app).post('/api/v1/login').expect(401)
+    return request(app).post('/api/v2/login').expect(401)
   })
   test('POST with worng email', () =>{
     return request(app)
-            .post('/api/v1/login')
+            .post('/api/v2/login')
             .send({
               'email': 'hoge@mail.com',
               'password': 'password'
@@ -33,7 +33,7 @@ describe('api/login.js', () => {
   })
   test('POST with worng password', () =>{
     return request(app)
-            .post('/api/v1/login')
+            .post('/api/v2/login')
             .send({
               'email': 'test@mail.com',
               'password': 'hoge'
@@ -44,7 +44,7 @@ describe('api/login.js', () => {
   })
   test('POST with correct info', () =>{
     return request(app)
-            .post('/api/v1/login')
+            .post('/api/v2/login')
             .send({
               'email': 'test@mail.com',
               'password': 'password'
