@@ -3,6 +3,7 @@ const app = require('../../server/api')
 const request = require('supertest')
 const assert = require('assert')
 
+
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }));
 
@@ -32,6 +33,7 @@ describe('api/artist.js', () => {
 
   test('POST artist info but it is already exist', async () =>{
     const token = await getToken()
+
     return request(app)
             .post('/api/v2/artist/config/new')
             .send({
