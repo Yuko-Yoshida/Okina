@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const { User } = require('../models')
+const Model = require('../models')
 const jwt = require('jsonwebtoken')
 const fs = require('fs')
 const environment = process.env.NODE_ENV || 'development'
@@ -11,7 +11,7 @@ router.post('/', (req, res) => {
   const email = req.body.email
   const password = req.body.password
 
-  User.findOne({ email: email }, (err, user) => {
+  Model('User').findOne({ email: email }, (err, user) => {
     if (err) return res.status(400).send()
     if (user == null) return res.status(401).send()
 

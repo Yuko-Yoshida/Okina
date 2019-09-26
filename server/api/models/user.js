@@ -8,10 +8,8 @@ const UserSchema = new Schema({
   password: { type: String, required: true }
 })
 
-UserSchema.pre('save', function(next) {
+function encryptPassword(next) {
   const user = this
-  // Only hase the password if it has been modified or created.
-  if (!user.isModified('password')) return next()
 
   bcrypt.genSalt(SALT_FACTOR, (err, salt) =>{
     if (err) return next(err)
@@ -23,7 +21,9 @@ UserSchema.pre('save', function(next) {
       next()
     })
   })
-})
+}
+
+UserSchema.pre('save', encryptPassword)
 
 UserSchema.methods.comparePassword = function(candidatePassword, cb) {
   bcrypt.compare(candidatePassword, this.password, (err, isMatch) => {

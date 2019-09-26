@@ -5,7 +5,7 @@
   "author": "Yuko_Yoshida",
   "private": true,
   "scripts": {
-    "test": "jest",
+    "test": "npx md-seed run --dropdb && jest",
     "dev": "NODE_ENV=development nodemon server/index.js --watch server",
     "build": "nuxt build",
     "start": "NODE_ENV=production node server/index.js",

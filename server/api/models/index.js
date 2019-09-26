@@ -5,8 +5,15 @@ const env = require(`../../../env.${environment}.js`)
 
 mongoose.connect(env.mongo_url)
 
-const UserSchema = require('./user')
+const User = mongoose.model('User', require('./user'))
 
-module.exports = {
-  User: mongoose.model('User', UserSchema)
+const schemas = {
+  User,
 }
+
+const Model = (schemaName) => {
+  if (!schemas[schemaName]) throw Error()
+  return schemas[schemaName]
+}
+
+module.exports = Model
