@@ -16,6 +16,7 @@
     "@nuxtjs/axios": "^5.3.6",
     "@nuxtjs/bulma": "^1.2.1",
     "bcrypt": "^3.0.6",
+    "bcrypt-nodejs": "0.0.3",
     "cross-env": "^5.2.1",
     "express": "^4.16.4",
     "jsonwebtoken": "^8.5.1",
