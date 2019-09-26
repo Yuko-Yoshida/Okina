@@ -1,6 +1,7 @@
 const express = require('express')
 const router = express.Router()
 const Model = require('../models')
+const environment = process.env.NODE_ENV || 'development'
 
 
 router.put('/', (req, res) => {
@@ -19,7 +20,7 @@ router.put('/', (req, res) => {
 
       return Model('User').deleteOne({ email: email }, (err) => {
         if (err) return res.status(400).send()
-        
+
         newEmail = (!newEmail) ? email : newEmail
         newPassword = (!newPassword) ? password : newPassword
 
@@ -31,5 +32,14 @@ router.put('/', (req, res) => {
     })
   })
 })
+
+if (environment === 'test') {
+  router.delete('/', (req, res) => {
+    Model('User').deleteOne({}, (err) => {
+      if (err) return res.status(400).send()
+      return res.status(200).send()
+    })
+  })
+}
 
 module.exports = router

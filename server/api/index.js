@@ -42,11 +42,13 @@ const jwt = (req, res, next) => {
 
 const login = require('./routes/login')
 const user = require('./routes/user')
+const userNew = require('./routes/userNew')
 const artist = require('./routes/artist')
 const artistConfigue = require('./routes/artistConfigue')
 
 app.use('/api/v2/login', login)
 app.use('/api/v2/user', jwt, user)
+app.use('/api/v2/user/new', userNew)
 app.use('/api/v2/artist', artist)
 app.use('/api/v2/artist/config', jwt, artistConfigue)
 

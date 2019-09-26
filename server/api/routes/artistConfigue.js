@@ -35,7 +35,7 @@ router.put('/', (req, res) => {
 
 if (environment === 'test') {
   router.delete('/', (req, res) => {
-    Model('Artist').deleteOne({}, (err, artist) => {
+    Model('Artist').deleteOne({}, (err) => {
       if (err) return res.status(400).send()
       return res.status(200).send()
     })
