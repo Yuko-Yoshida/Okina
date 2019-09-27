@@ -7,14 +7,16 @@ mongoose.connect(env.mongo_url)
 
 const User = mongoose.model('User', require('./user'))
 const Artist = mongoose.model('Artist', require('./artist'))
+const Song = mongoose.model('Song', require('./song'))
 
 const schemas = {
   User,
   Artist,
+  Song
 }
 
 const Model = (schemaName) => {
-  if (!schemas[schemaName]) throw Error()
+  if (!schemas[schemaName]) throw Error(`${schemaName} not found.`)
   return schemas[schemaName]
 }
 

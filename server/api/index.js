@@ -7,9 +7,14 @@ const JWTStrategy = passportJWT.Strategy
 const fs = require('fs')
 const environment = process.env.NODE_ENV || 'development'
 const env = require(`../../env.${environment}.js`)
+const errorhandler = require('errorhandler');
 
 
 app.use(express.json())
+app.use(errorhandler())
+app.use(express.json({ limit: '50mb' }));
+app.use(express.raw({ type: 'audio/wav', limit: '50mb' }));
+
 
 
 const opts = {
@@ -45,12 +50,15 @@ const user = require('./routes/user')
 const userNew = require('./routes/userNew')
 const artist = require('./routes/artist')
 const artistConfigue = require('./routes/artistConfigue')
+const { song, songAuth } = require('./routes/song')
 
 app.use('/api/v2/login', login)
 app.use('/api/v2/user', jwt, user)
 app.use('/api/v2/user/new', userNew)
 app.use('/api/v2/artist', artist)
 app.use('/api/v2/artist/config', jwt, artistConfigue)
+app.use('/api/v2/song', song)
+app.use('/api/v2/song', jwt, songAuth)
 
 
 module.exports = app
