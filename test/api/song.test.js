@@ -6,7 +6,7 @@ const fs = require('fs')
 
 
 app.use(express.json())
-// app.use(express.urlencoded({ extended: true }));
+app.use(express.urlencoded({ extended: true }));
 
 
 function getToken() {
@@ -193,6 +193,45 @@ describe('api/song.js', () => {
             .set('Authorization', token)
             .set('Content-Type', 'multipart/form-data')
             .field('songInfo', JSON.stringify(songInfo))
+            .expect(200)
+  })
+
+  test('update song info with lack of songInfo', async () =>{
+    const token = await getToken()
+
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    const songInfo = {
+      title: 'test504',
+      album: 'album504'
+    }
+
+    return request(app)
+            .put('/api/v2/song/'+song.filename)
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('songInfo', JSON.stringify(songInfo))
+            .expect(200)
+  })
+
+  test('update artwork', async () =>{
+    const token = await getToken()
+
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    return request(app)
+            .put('/api/v2/song/'+song.filename)
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .attach('artwork', __dirname+'/files/test.png')
             .expect(200)
   })
 })

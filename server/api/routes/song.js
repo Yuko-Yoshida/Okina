@@ -71,7 +71,7 @@ routerAuth.put('/:id', (req, res) => {
     return upload(req, res, (err) => {
       if (err) return res.status(400).send()
 
-      const body = JSON.parse(req.body.songInfo)
+      const body = (req.body.songInfo) ? JSON.parse(req.body.songInfo) : req.body
 
       const artist = (body.artist) ? body.artist : song.artist
       const title = (body.title) ? body.title : song.title
