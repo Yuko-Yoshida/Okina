@@ -35,7 +35,7 @@ describe('api/artist.js', () => {
     const token = await getToken()
 
     return request(app)
-            .post('/api/v2/artist/config/new')
+            .post('/api/v2/artist/new')
             .send({
               'name': 'hoge',
               'description': 'piyo'
@@ -50,11 +50,11 @@ describe('api/artist.js', () => {
     const token = await getToken()
 
     await request(app)
-            .delete('/api/v2/artist/config/')
+            .delete('/api/v2/artist')
             .set('Authorization', token)
 
     await request(app)
-            .post('/api/v2/artist/config/new')
+            .post('/api/v2/artist/new')
             .send({
               'name': 'hoge',
               'description': 'piyo'
@@ -77,7 +77,7 @@ describe('api/artist.js', () => {
     const token = await getToken()
 
     await request(app)
-            .put('/api/v2/artist/config')
+            .put('/api/v2/artist')
             .send({
               'name': 'udon',
               'description': 'tewi'
