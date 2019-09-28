@@ -122,4 +122,77 @@ describe('api/song.js', () => {
             .attach('artwork', __dirname+'/files/test.png')
             .expect(400)
   })
+
+  test('update song', async () =>{
+    const token = await getToken()
+
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    const songInfo = {
+      artist: 'test40',
+      title: 'test40',
+      album: 'album40'
+    }
+
+    return request(app)
+            .put('/api/v2/song/'+song.filename)
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('songInfo', JSON.stringify(songInfo))
+            .attach('song', __dirname+'/files/test.wav')
+            .attach('artwork', __dirname+'/files/test.png')
+            .expect(200)
+  })
+
+  test('update song but worng id', async () =>{
+    const token = await getToken()
+
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    const songInfo = {
+      artist: 'test40',
+      title: 'test40',
+      album: 'album40'
+    }
+
+    return request(app)
+            .put('/api/v2/song/'+'hogehoge')
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('songInfo', JSON.stringify(songInfo))
+            .attach('song', __dirname+'/files/test.wav')
+            .attach('artwork', __dirname+'/files/test.png')
+            .expect(400)
+  })
+
+  test('update song info', async () =>{
+    const token = await getToken()
+
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    const songInfo = {
+      artist: 'test404',
+      title: 'test404',
+      album: 'album404'
+    }
+
+    return request(app)
+            .put('/api/v2/song/'+song.filename)
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('songInfo', JSON.stringify(songInfo))
+            .expect(200)
+  })
 })

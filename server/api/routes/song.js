@@ -56,9 +56,45 @@ routerAuth.post('/upload', (req, res) => {
     }
     if (!songInfo.artist || !songInfo.title) return res.status(400).send()
 
-    return Model('Song').create((err) => {
+    return Model('Song').create(songInfo, (err) => {
       if (err) return res.status(400).send()
       return res.status(200).send()
+    })
+  })
+})
+
+routerAuth.put('/:id', (req, res) => {
+  Model('Song').findOne({ filename: req.params.id }, (err, song) => {
+    if (err) return res.status(400).send()
+    if (!song) return res.status(400).send()
+
+    return upload(req, res, (err) => {
+      if (err) return res.status(400).send()
+
+      const body = JSON.parse(req.body.songInfo)
+
+      const artist = (body.artist) ? body.artist : song.artist
+      const title = (body.title) ? body.title : song.title
+      const album = (body.album) ? body.album : song.album
+      const artwork = (req.files.artwork) ? req.files.artwork[0].filename : song.artwork
+      const filename = (req.files.song) ? req.files.song[0].filename : song.filename
+
+      const songInfo = {
+        artist: artist,
+        title: title,
+        album: album,
+        artwork: artwork,
+        filename: filename
+      }
+
+      return song.update(songInfo, (err) => {
+        if (err) return res.status(400).send()
+        if (req.files.song) {
+          fs.unlinkSync(__dirname+'/uploads/'+song.filename)
+          console.log('deleted: '+song.filename);
+        }
+        return res.status(200).send()
+      })
     })
   })
 })
