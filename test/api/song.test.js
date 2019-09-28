@@ -243,4 +243,82 @@ describe('api/song.js', () => {
             .attach('artwork', __dirname+'/files/test.png')
             .expect(200)
   })
+
+  test('get song', async () => {
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    return request(app)
+            .get('/api/v2/song/'+song.filename)
+            .expect(200)
+  })
+
+  test('get song but worng id', async () => {
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    return request(app)
+            .get('/api/v2/song/'+'usausa')
+            .expect(400)
+  })
+
+  test('get audio data', async () => {
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    return request(app)
+            .get('/api/v2/song/'+song.filename+'/audio')
+            .expect(200)
+            .then(res => {
+              assert(typeof res.body === 'object')
+            })
+  })
+
+  test('get audio data but worng id', async () => {
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    return request(app)
+            .get('/api/v2/song/'+'usausa'+'/audio')
+            .expect(400)
+  })
+
+  test('get artwork data', async () => {
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    return request(app)
+            .get('/api/v2/song/'+song.filename+'/artwork')
+            .expect(200)
+            .then(res => {
+              assert(typeof res.body === 'object')
+            })
+  })
+
+  test('get artwork data but it not exists', async () => {
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body[3]
+                          })
+
+    return request(app)
+            .get('/api/v2/song/'+song.filename+'/artwork')
+            .expect(404)
+  })
 })
