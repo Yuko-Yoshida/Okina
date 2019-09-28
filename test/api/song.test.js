@@ -104,4 +104,22 @@ describe('api/song.js', () => {
             .attach('artwork', __dirname+'/files/test.png')
             .expect(400)
   })
+
+  test('upload song with lack of songInfo', async () =>{
+    const token = await getToken()
+
+    const songInfo = {
+      artist: 'test4',
+      album: 'album4'
+    }
+
+    return request(app)
+            .post('/api/v2/song/upload')
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('songInfo', JSON.stringify(songInfo))
+            .attach('song', __dirname+'/files/test.wav')
+            .attach('artwork', __dirname+'/files/test.png')
+            .expect(400)
+  })
 })

@@ -54,6 +54,7 @@ routerAuth.post('/upload', (req, res) => {
       artwork: artwork,
       filename: req.files.song[0].filename
     }
+    if (!songInfo.artist || !songInfo.title) return res.status(400).send()
 
     return Model('Song').create((err) => {
       if (err) return res.status(400).send()
