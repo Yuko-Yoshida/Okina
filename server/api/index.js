@@ -12,8 +12,7 @@ const errorhandler = require('errorhandler');
 
 app.use(express.json())
 app.use(errorhandler())
-app.use(express.json({ limit: '50mb' }));
-app.use(express.raw({ type: 'audio/wav', limit: '50mb' }));
+app.use(express.raw({ type: 'audio/wav', limit: '50mb' }))
 
 
 
