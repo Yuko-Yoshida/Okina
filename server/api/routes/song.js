@@ -39,6 +39,43 @@ router.get('/', (req, res) => {
   })
 })
 
+router.get('/:id', (req, res) => {
+  Model('Song').findOne({ filename: req.params.id }, (err, song) => {
+    if (err) return res.status(400).send()
+    if (!song) return res.status(400).send()
+
+    const songInfo = {
+      artist: song.artist,
+      title: song.title,
+      album: song.album,
+      artwork: song.artwork,
+      filename: song.filename,
+      date: song.date
+    }
+
+    return res.status(200).json(songInfo)
+  })
+})
+
+router.get('/:id/audio', (req, res) => {
+  Model('Song').findOne({ filename: req.params.id }, (err, song) => {
+    if (err) return res.status(400).send()
+    if (!song) return res.status(400).send()
+
+    return res.status(200).sendFile(__dirname+'/uploads/'+song.filename)
+  })
+})
+
+router.get('/:id/artwork', (req, res) => {
+  Model('Song').findOne({ filename: req.params.id }, (err, song) => {
+    if (err) return res.status(400).send()
+    if (!song) return res.status(400).send()
+    if (!song.artwork) return res.status(404).send()
+
+    return res.status(200).sendFile(__dirname+'/uploads/'+song.artwork)
+  })
+})
+
 routerAuth.post('/upload', (req, res) => {
   upload(req, res, (err) => {
     if (err) return res.status(400).send()
