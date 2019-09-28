@@ -21,8 +21,17 @@ function getToken() {
           .then((res) => res.body.token)
 }
 
+afterAll(() => {
+  // delete uploads dir after tests.
+  const dir = __dirname+'/../../server/api/routes/uploads/'
+  const targets = fs.readdirSync(dir)
+  targets.map(target => fs.unlinkSync(dir+target))
+  return fs.rmdirSync(dir)
+})
+
 describe('api/song.js', () => {
-  test('GET songs', () =>{
+
+  test('GET songs', () => {
     return request(app)
             .get('/api/v2/song')
             .expect(200)
@@ -31,7 +40,7 @@ describe('api/song.js', () => {
             })
   })
 
-  test('upload song', async () =>{
+  test('upload song', async () => {
     const token = await getToken()
 
     const songInfo = {
@@ -50,7 +59,7 @@ describe('api/song.js', () => {
             .expect(200)
   })
 
-  test('upload song with artwork', async () =>{
+  test('upload song with artwork', async () => {
     const token = await getToken()
 
     const songInfo = {
@@ -69,7 +78,7 @@ describe('api/song.js', () => {
             .expect(200)
   })
 
-  test('upload song without songInfo', async () =>{
+  test('upload song without songInfo', async () => {
     const token = await getToken()
 
     const songInfo = {
@@ -87,7 +96,7 @@ describe('api/song.js', () => {
             .expect(400)
   })
 
-  test('upload song without song', async () =>{
+  test('upload song without song', async () => {
     const token = await getToken()
 
     const songInfo = {
@@ -105,7 +114,7 @@ describe('api/song.js', () => {
             .expect(400)
   })
 
-  test('upload song with lack of songInfo', async () =>{
+  test('upload song with lack of songInfo', async () => {
     const token = await getToken()
 
     const songInfo = {
@@ -123,7 +132,7 @@ describe('api/song.js', () => {
             .expect(400)
   })
 
-  test('update song', async () =>{
+  test('update song', async () => {
     const token = await getToken()
 
     const song = await request(app)
@@ -148,7 +157,7 @@ describe('api/song.js', () => {
             .expect(200)
   })
 
-  test('update song but worng id', async () =>{
+  test('update song but worng id', async () => {
     const token = await getToken()
 
     const song = await request(app)
@@ -173,7 +182,7 @@ describe('api/song.js', () => {
             .expect(400)
   })
 
-  test('update song info', async () =>{
+  test('update song info', async () => {
     const token = await getToken()
 
     const song = await request(app)
@@ -196,7 +205,7 @@ describe('api/song.js', () => {
             .expect(200)
   })
 
-  test('update song info with lack of songInfo', async () =>{
+  test('update song info with lack of songInfo', async () => {
     const token = await getToken()
 
     const song = await request(app)
@@ -218,7 +227,7 @@ describe('api/song.js', () => {
             .expect(200)
   })
 
-  test('update artwork', async () =>{
+  test('update artwork', async () => {
     const token = await getToken()
 
     const song = await request(app)
