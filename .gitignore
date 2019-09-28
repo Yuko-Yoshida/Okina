@@ -87,5 +87,5 @@ sw.*
 # Mac OSX
 .DS_Store
 
-# server/api/routes/
+server/api/routes/uploads
 ._*
