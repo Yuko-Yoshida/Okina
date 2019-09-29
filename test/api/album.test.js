@@ -21,6 +21,14 @@ function getToken() {
           .then((res) => res.body.token)
 }
 
+afterAll(() => {
+  // delete uploads dir after tests.
+  const dir = __dirname+'/../../server/api/routes/uploads/'
+  const targets = fs.readdirSync(dir)
+  targets.map(target => fs.unlinkSync(dir+target))
+  return fs.rmdirSync(dir)
+})
+
 describe('api/song.js', () => {
 
   test('GET albums', () => {
@@ -28,8 +36,69 @@ describe('api/song.js', () => {
             .get('/api/v2/album')
             .expect(200)
             .then(res => {
-              console.log(res.body);
               assert(res.body.length === 2)
+            })
+  })
+
+  test('POST album', async () => {
+    const token = await getToken()
+
+    const albumInfo = {
+      artist: 'test4',
+      title: 'test4',
+      description: 'test4',
+      songs: ['album4', 'album4', 'album4']
+    }
+
+    return request(app)
+            .post('/api/v2/album/upload')
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('albumInfo', JSON.stringify(albumInfo))
+            .attach('artwork', '')
+            .expect(200)
+            .then(res => {
+              console.log(res.body.id);
+            })
+  })
+
+  test('POST album but lack of info', async () => {
+    const token = await getToken()
+
+    const albumInfo = {
+      title: 'test4',
+      description: 'test4',
+      songs: ['album4', 'album4', 'album4']
+    }
+
+    return request(app)
+            .post('/api/v2/album/upload')
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('albumInfo', JSON.stringify(albumInfo))
+            .attach('artwork', '')
+            .expect(400)
+  })
+
+  test('POST album with artwork', async () => {
+    const token = await getToken()
+
+    const albumInfo = {
+      artist: 'test4',
+      title: 'test4',
+      description: 'test4',
+      songs: ['album4', 'album4', 'album4']
+    }
+
+    return request(app)
+            .post('/api/v2/album/upload')
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('albumInfo', JSON.stringify(albumInfo))
+            .attach('artwork', __dirname+'/files/test.png')
+            .expect(200)
+            .then(res => {
+              console.log(res.body.id);
             })
   })
 })
