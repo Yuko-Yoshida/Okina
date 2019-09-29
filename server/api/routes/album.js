@@ -4,6 +4,7 @@ const routerAuth = express.Router()
 const Model = require('../models')
 const multer = require('multer')
 const fs = require('fs')
+const zip = require('../modules/zip')
 
 
 const storage = multer.diskStorage({
@@ -34,6 +35,46 @@ router.get('/', (req, res) => {
       }
     })
     res.status(200).json(albumInfos)
+  })
+})
+
+router.get('/:id', (req, res) => {
+  Model('Album').findOne({ _id: req.params.id }, (err, album) => {
+    if (err) return res.status(400).send()
+    if (!album) return res.status(400).send()
+
+    const albumInfos = {
+      id: album._id,
+      artist: album.artist,
+      title: album.title,
+      songs: album.songs,
+      artwork: album.artwork,
+      date: album.date
+    }
+    res.status(200).json(albumInfos)
+  })
+})
+
+router.get('/:id/download', (req, res) => {
+  Model('Album').findOne({ _id: req.params.id }, (err, album) => {
+    if (err) return res.status(400).send()
+    if (!album) return res.status(400).send()
+
+    return Model('Song').find({ _id: album.songs }, (err, songs) => {
+      if (err) return res.status(400).send()
+      if (!songs) return res.status(400).send()
+
+      const zipFile = songs.map((song) => {
+        return {
+          name: song.title+'.wav',
+          data: fs.createReadStream(__dirname+'/uploads/'+song.filename)
+        }
+      })
+
+      console.log(zipFile);
+
+      return res.status(200).zip(zipFile, album.title)
+    })
   })
 })
 
