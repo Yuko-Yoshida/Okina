@@ -101,4 +101,54 @@ describe('api/song.js', () => {
               console.log(res.body.id);
             })
   })
+
+  test('update album', async () => {
+    const token = await getToken()
+
+    const album = await request(app)
+                          .get('/api/v2/album')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    const albumInfo = {
+      artist: 'hoge4',
+      title: 'hoge4',
+      description: 'hoge4',
+      songs: ['hoge4', 'hoge4', 'hoge4']
+    }
+
+    return request(app)
+            .put('/api/v2/album/'+album.id)
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('albumInfo', JSON.stringify(albumInfo))
+            .attach('artwork', __dirname+'/files/test.png')
+            .expect(200)
+  })
+
+  test('update album but album not found', async () => {
+    const token = await getToken()
+
+    const album = await request(app)
+                          .get('/api/v2/album')
+                          .then(res => {
+                            return res.body.slice(-1)[0] // get last one
+                          })
+
+    const albumInfo = {
+      artist: 'hoge4',
+      title: 'hoge4',
+      description: 'hoge4',
+      songs: ['hoge4', 'hoge4', 'hoge4']
+    }
+
+    return request(app)
+            .put('/api/v2/album/123124')
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('albumInfo', JSON.stringify(albumInfo))
+            .attach('artwork', __dirname+'/files/test.png')
+            .expect(400)
+  })
 })
