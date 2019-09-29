@@ -148,7 +148,7 @@ describe('api/song.js', () => {
     }
 
     return request(app)
-            .put('/api/v2/song/'+song.filename)
+            .put('/api/v2/song/'+song.id)
             .set('Authorization', token)
             .set('Content-Type', 'multipart/form-data')
             .field('songInfo', JSON.stringify(songInfo))
@@ -198,7 +198,7 @@ describe('api/song.js', () => {
     }
 
     return request(app)
-            .put('/api/v2/song/'+song.filename)
+            .put('/api/v2/song/'+song.id)
             .set('Authorization', token)
             .set('Content-Type', 'multipart/form-data')
             .field('songInfo', JSON.stringify(songInfo))
@@ -220,7 +220,7 @@ describe('api/song.js', () => {
     }
 
     return request(app)
-            .put('/api/v2/song/'+song.filename)
+            .put('/api/v2/song/'+song.id)
             .set('Authorization', token)
             .set('Content-Type', 'multipart/form-data')
             .field('songInfo', JSON.stringify(songInfo))
@@ -237,7 +237,7 @@ describe('api/song.js', () => {
                           })
 
     return request(app)
-            .put('/api/v2/song/'+song.filename)
+            .put('/api/v2/song/'+song.id)
             .set('Authorization', token)
             .set('Content-Type', 'multipart/form-data')
             .attach('artwork', __dirname+'/files/test.png')
@@ -252,7 +252,7 @@ describe('api/song.js', () => {
                           })
 
     return request(app)
-            .get('/api/v2/song/'+song.filename)
+            .get('/api/v2/song/'+song.id)
             .expect(200)
   })
 
@@ -276,7 +276,7 @@ describe('api/song.js', () => {
                           })
 
     return request(app)
-            .get('/api/v2/song/'+song.filename+'/audio')
+            .get('/api/v2/song/'+song.id+'/audio')
             .expect(200)
             .then(res => {
               assert(typeof res.body === 'object')
@@ -303,7 +303,7 @@ describe('api/song.js', () => {
                           })
 
     return request(app)
-            .get('/api/v2/song/'+song.filename+'/artwork')
+            .get('/api/v2/song/'+song.id+'/artwork')
             .expect(200)
             .then(res => {
               assert(typeof res.body === 'object')
@@ -318,7 +318,7 @@ describe('api/song.js', () => {
                           })
 
     return request(app)
-            .get('/api/v2/song/'+song.filename+'/artwork')
+            .get('/api/v2/song/'+song.id+'/artwork')
             .expect(404)
   })
 })

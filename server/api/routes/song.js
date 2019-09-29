@@ -27,6 +27,7 @@ router.get('/', (req, res) => {
 
     const songInfos = songs.map((song) => {
       return {
+        id: song._id,
         artist: song.artist,
         title: song.title,
         album: song.album,
@@ -40,11 +41,12 @@ router.get('/', (req, res) => {
 })
 
 router.get('/:id', (req, res) => {
-  Model('Song').findOne({ filename: req.params.id }, (err, song) => {
+  Model('Song').findOne({ _id: req.params.id }, (err, song) => {
     if (err) return res.status(400).send()
     if (!song) return res.status(400).send()
 
     const songInfo = {
+      id: song._id,
       artist: song.artist,
       title: song.title,
       album: song.album,
@@ -58,7 +60,7 @@ router.get('/:id', (req, res) => {
 })
 
 router.get('/:id/audio', (req, res) => {
-  Model('Song').findOne({ filename: req.params.id }, (err, song) => {
+  Model('Song').findOne({ _id: req.params.id }, (err, song) => {
     if (err) return res.status(400).send()
     if (!song) return res.status(400).send()
 
@@ -67,7 +69,7 @@ router.get('/:id/audio', (req, res) => {
 })
 
 router.get('/:id/artwork', (req, res) => {
-  Model('Song').findOne({ filename: req.params.id }, (err, song) => {
+  Model('Song').findOne({ _id: req.params.id }, (err, song) => {
     if (err) return res.status(400).send()
     if (!song) return res.status(400).send()
     if (!song.artwork) return res.status(404).send()
@@ -93,15 +95,15 @@ routerAuth.post('/upload', (req, res) => {
     }
     if (!songInfo.artist || !songInfo.title) return res.status(400).send()
 
-    return Model('Song').create(songInfo, (err) => {
+    return Model('Song').create(songInfo, (err, song) => {
       if (err) return res.status(400).send()
-      return res.status(200).send()
+      return res.status(200).json({ id: song._id })
     })
   })
 })
 
 routerAuth.put('/:id', (req, res) => {
-  Model('Song').findOne({ filename: req.params.id }, (err, song) => {
+  Model('Song').findOne({ _id: req.params.id }, (err, song) => {
     if (err) return res.status(400).send()
     if (!song) return res.status(400).send()
 
