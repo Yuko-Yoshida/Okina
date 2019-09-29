@@ -48,6 +48,7 @@ const login = require('./routes/login')
 const { user, userAuth } = require('./routes/user')
 const { artist, artistAuth } = require('./routes/artist')
 const { song, songAuth } = require('./routes/song')
+const { album, albumAuth } = require('./routes/album')
 
 app.use('/api/v2/login', login)
 app.use('/api/v2/user', user)
@@ -56,6 +57,7 @@ app.use('/api/v2/artist', artist)
 app.use('/api/v2/artist', jwt, artistAuth)
 app.use('/api/v2/song', song)
 app.use('/api/v2/song', jwt, songAuth)
-
+app.use('/api/v2/album', album)
+app.use('/api/v2/album', jwt, albumAuth)
 
 module.exports = app
