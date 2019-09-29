@@ -8,11 +8,14 @@ mongoose.connect(env.mongo_url)
 const User = mongoose.model('User', require('./user'))
 const Artist = mongoose.model('Artist', require('./artist'))
 const Song = mongoose.model('Song', require('./song'))
+const Album = mongoose.model('Album', require('./album'))
+
 
 const schemas = {
   User,
   Artist,
-  Song
+  Song,
+  Album
 }
 
 const Model = (schemaName) => {
