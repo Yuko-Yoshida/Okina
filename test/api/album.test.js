@@ -151,4 +151,46 @@ describe('api/song.js', () => {
             .attach('artwork', __dirname+'/files/test.png')
             .expect(400)
   })
+
+  test('Upload album then download that', async () => {
+    jest.setTimeout(10000);
+
+    const token = await getToken()
+
+    const songInfo = {
+      artist: 'test4',
+      title: 'test4',
+      album: 'album4'
+    }
+
+    const song = await request(app)
+                        .post('/api/v2/song/upload')
+                        .set('Authorization', token)
+                        .set('Content-Type', 'multipart/form-data')
+                        .field('songInfo', JSON.stringify(songInfo))
+                        .attach('song', __dirname+'/files/test.wav')
+                        .attach('artwork', '')
+                        .expect(200)
+                        .then(res => res.body)
+
+    const albumInfo = {
+      artist: 'hoge4',
+      title: 'hoge4',
+      description: 'hoge4',
+      songs: [song.id]
+    }
+
+    const album = await request(app)
+                          .post('/api/v2/album/upload')
+                          .set('Authorization', token)
+                          .set('Content-Type', 'multipart/form-data')
+                          .field('albumInfo', JSON.stringify(albumInfo))
+                          .attach('artwork', '')
+                          .expect(200)
+                          .then(res => res.body)
+
+    return request(app)
+            .get('/api/v2/album/'+album.id+'/download')
+            .expect(200)
+  })
 })
