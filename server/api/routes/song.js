@@ -65,7 +65,13 @@ router.get('/:id/audio', (req, res) => {
     if (err) return res.status(400).send()
     if (!song) return res.status(400).send()
 
-    return res.status(200).sendFile(__dirname+'/uploads/'+song.filename)
+    return ffmpeg(__dirname+'/uploads/'+song.filename)
+            .audioBitrate('128k')
+            .audioChannels(2)
+            .audioCodec('libmp3lame')
+            .format('mp3')
+            .on('error', (err) => res.status(400).send())
+            .pipe(res)
   })
 })
 

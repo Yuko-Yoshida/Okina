@@ -22,7 +22,6 @@
     "cross-env": "^5.2.1",
     "errorhandler": "^1.5.1",
     "express": "^4.16.4",
-    "express-zip": "^2.0.1",
     "fluent-ffmpeg": "^2.1.2",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.7.1",
