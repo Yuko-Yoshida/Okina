@@ -41,6 +41,8 @@ describe('api/song.js', () => {
   })
 
   test('upload song', async () => {
+    jest.setTimeout(20000);
+
     const token = await getToken()
 
     const songInfo = {
