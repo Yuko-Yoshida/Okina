@@ -79,6 +79,17 @@ router.get('/:id/artwork', (req, res) => {
   })
 })
 
+router.get('/:id/download', (req, res) => {
+  Model('Song').findOne({ _id: req.params.id }, (err, song) => {
+    if (err) return res.status(400).send()
+    if (!song) return res.status(400).send()
+
+    res.header('Content-Type', 'audio/wav')
+    res.header('Content-Disposition', 'attachment; filename="' + song.title + '.wav')
+    return res.status(200).send()
+  })
+})
+
 routerAuth.post('/upload', (req, res) => {
   upload(req, res, (err) => {
     if (err) return res.status(400).send()
@@ -153,7 +164,7 @@ routerAuth.put('/:id', (req, res) => {
                   .run()
         }
         else {
-          return res.status(200).send()  
+          return res.status(200).send()
         }
       })
     })

@@ -323,4 +323,16 @@ describe('api/song.js', () => {
             .get('/api/v2/song/'+song.id+'/artwork')
             .expect(404)
   })
+
+  test('download song', async () => {
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0]
+                          })
+
+    return request(app)
+            .get('/api/v2/song/'+song.id+'/download')
+            .expect(200)
+  })
 })
