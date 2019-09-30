@@ -99,6 +99,7 @@ routerAuth.post('/upload', (req, res) => {
     return Model('Song').create(songInfo, (err, song) => {
       if (err) return res.status(400).send()
 
+      // to wav
       return ffmpeg(__dirname+'/uploads/'+song.filename)
               .output(__dirname+'/uploads/'+song.filename+'.wav')
               .on('error', (err) => res.status(400).send())
@@ -140,9 +141,20 @@ routerAuth.put('/:id', (req, res) => {
         if (err) return res.status(400).send()
         if (req.files.song) {
           fs.unlinkSync(__dirname+'/uploads/'+song.filename)
-          console.log('deleted: '+song.filename);
+          // to wav
+          return ffmpeg(__dirname+'/uploads/'+songInfo.filename)
+                  .output(__dirname+'/uploads/'+songInfo.filename+'.wav')
+                  .on('error', (err) => res.status(400).send())
+                  .on('end', () => {
+                    fs.renameSync(__dirname+'/uploads/'+songInfo.filename+'.wav',
+                                  __dirname+'/uploads/'+songInfo.filename)
+                    return res.status(200).send()
+                  })
+                  .run()
         }
-        return res.status(200).send()
+        else {
+          return res.status(200).send()  
+        }
       })
     })
   })
