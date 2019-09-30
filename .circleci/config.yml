@@ -34,5 +34,5 @@ jobs:
           key: v1-dependencies-{{ checksum "package.json" }}
 
       # run tests!
-      - run: apt update && apt install ffmpeg
+      - run: sudo apt update && sudo apt install ffmpeg
       - run: npm run seeder && npm test
