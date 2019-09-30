@@ -63,6 +63,7 @@ router.get('/:id/download', (req, res) => {
     return Model('Song').find({ _id: album.songs }, (err, songs) => {
       if (err) return res.status(400).send()
       if (!songs) return res.status(400).send()
+      if (album.songs.length !== songs.length) return res.status(400).send()
 
       const zipFile = songs.map((song) => {
         return {
@@ -71,7 +72,12 @@ router.get('/:id/download', (req, res) => {
         }
       })
 
-      console.log(zipFile);
+      if (album.artwork) {
+        zipFile.push({
+          name: 'artwork.png',
+          data: fs.createReadStream(__dirname+'/uploads/'+album.artwork)
+        })
+      }
 
       return res.status(200).zip(zipFile, album.title)
     })
