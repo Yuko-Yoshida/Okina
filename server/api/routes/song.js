@@ -5,6 +5,7 @@ const Model = require('../models')
 const multer = require('multer')
 const fs = require('fs')
 const ffmpeg = require('fluent-ffmpeg')
+const uuidv4 = require('uuid/v4')
 
 
 const storage = multer.diskStorage({
@@ -65,13 +66,24 @@ router.get('/:id/audio', (req, res) => {
     if (err) return res.status(400).send()
     if (!song) return res.status(400).send()
 
+    const tmpname = __dirname+'/uploads/'+song.filename+uuidv4()
+
     return ffmpeg(__dirname+'/uploads/'+song.filename)
+            .output(tmpname)
             .audioBitrate('128k')
             .audioChannels(2)
             .audioCodec('libmp3lame')
             .format('mp3')
             .on('error', (err) => res.status(400).send())
-            .pipe(res)
+            .on('end', () => {
+              res.set('Content-Type', 'audio/mp3')
+              res.set('Content-Length', fs.statSync(tmpname).size)
+
+              const buffer = fs.readFileSync(tmpname)
+              fs.unlinkSync(tmpname)
+              return res.status(200).send(buffer)
+            })
+            .run()
   })
 })
 
