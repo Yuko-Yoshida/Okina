@@ -39,6 +39,7 @@ module.exports = {
     '@nuxtjs/bulma',
     // Doc: https://axios.nuxtjs.org/usage
     '@nuxtjs/axios',
+    ['cookie-universal-nuxt', { parseJSON: true }]
   ],
   /*
   ** Axios module configuration
