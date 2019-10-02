@@ -203,4 +203,24 @@ routerAuth.put('/:id', (req, res) => {
   })
 })
 
+routerAuth.delete('/:id', (req, res) => {
+  Model('Song').findOne({ _id: req.params.id }, (err, song) => {
+    if (err) return res.status(400).send()
+    if (!song) return res.status(400).send()
+
+    const id = song._id
+    const filename = song.filename
+    const artwork = song.artwork
+
+    return Model('Song').deleteOne({ _id: id }, (err) => {
+      if (err) return res.status(400).send()
+
+      fs.unlinkSync(__dirname+'/uploads/'+filename)
+      if (artwork) fs.unlinkSync(__dirname+'/uploads/'+artwork)
+
+      return res.status(200).send()
+    })
+  })
+})
+
 module.exports = { song: router, songAuth: routerAuth }
