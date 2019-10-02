@@ -25,6 +25,20 @@
             ref="player"
           />
         </no-ssr>
+        <div class="card">
+          <header class="card-header">
+            <p class="card-header-title">
+              {{ title }}
+            </p>
+          </header>
+          <div class="card-content">
+            <div class="content">
+              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
+              <a href="#">@bulmaio</a>. <a href="#">#css</a> <a href="#">#responsive</a>
+              <br>
+            </div>
+          </div>
+        </div>
       </div>
       <div class="column">
         <div class="card">
@@ -61,7 +75,11 @@ import Aplayer from 'vue-aplayer'
 export default {
   data: function() {
     return {
-      currentId: ''
+      currentId: '',
+      title: '',
+      artist: '',
+      album: '',
+      date: ''
     }
   },
   asyncData: function({ $axios }) {
@@ -86,7 +104,17 @@ export default {
     getCurrentSong: function() {
       const src = this.$refs.player.$refs.audio.currentSrc
       const id = src.split('/')
-      this.id = id[6]
+      this.currentId = id[6]
+      this.getSongInfo(this.currentId)
+    },
+    getSongInfo: function(id) {
+      return this.$axios.$get('http://localhost:3000/api/v2/song/'+id)
+              .then((res) => {
+                this.title = res.title
+                this.artist = res.artist
+                this.album = res.album
+                this.date = res.date
+              })
     }
   }
 }
