@@ -16,24 +16,12 @@
     <div class="columns">
       <div class="column is-two-thirds">
         <no-ssr>
-          <aplayer preload="matadata"
-            :music="{
-              title: '',
-              artist: '',
-              src: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.mp3',
-              pic: ''
-            }"
-          />
-        </no-ssr>
-        <no-ssr>
-          <aplayer preload="matadata"
-            :music="{
-              title: '',
-              artist: '',
-              src: 'https://moeplayer.b0.upaiyun.com/aplayer/secretbase.mp3',
-              pic: ''
-            }"
-          />
+          <div v-for="music in songInfos">
+            <aplayer
+              preload="matadata"
+              :music='music'
+            />
+          </div>
         </no-ssr>
       </div>
       <div class="column">
@@ -74,6 +62,31 @@
 import Aplayer from 'vue-aplayer'
 
 export default {
+  asyncData: function({ $axios }) {
+    return $axios.$get('http://localhost:3000/api/v2/song')
+    .then((res) => {
+      const songInfos = res.map((song) => {
+        return {
+          artist: song.artist,
+          title: song.title,
+          album: song.album,
+          pic: 'http://localhost:3000/api/v2/song/'+song.id+'/artwork',
+          src: 'http://localhost:3000/api/v2/song/'+song.id+'/audio'
+        }
+      })
+      return { songInfos: songInfos }
+    })
+  },
+  data: function () {
+    return {
+      music: {
+        title: 'test',
+        artist: '',
+        src: '',
+        pic: '',
+      },
+    }
+  },
   components: {
     Aplayer
   }
