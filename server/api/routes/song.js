@@ -102,9 +102,23 @@ router.get('/:id/download', (req, res) => {
     if (err) return res.status(400).send()
     if (!song) return res.status(400).send()
 
-    res.header('Content-Type', 'audio/wav')
-    res.header('Content-Disposition', 'attachment; filename="' + song.title + '.wav')
-    return res.status(200).send()
+    const tmpname = __dirname+'/uploads/'+song.filename+uuidv4()
+
+    return ffmpeg(__dirname+'/uploads/'+song.filename)
+            .output(tmpname)
+            .audioChannels(2)
+            .format('wav')
+            .on('error', (err) => res.status(400).send())
+            .on('end', () => {
+              res.set('Content-Type', 'audio/wav')
+              res.set('Content-Length', fs.statSync(tmpname).size)
+              res.set('Content-Disposition', 'attachment; filename="' + song.title + '.wav')
+
+              const buffer = fs.readFileSync(tmpname)
+              fs.unlinkSync(tmpname)
+              return res.status(200).send(buffer)
+            })
+            .run()
   })
 })
 
