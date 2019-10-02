@@ -335,4 +335,19 @@ describe('api/song.js', () => {
             .get('/api/v2/song/'+song.id+'/download')
             .expect(200)
   })
+
+  test('delete song', async () => {
+    const token = await getToken()
+
+    const song = await request(app)
+                          .get('/api/v2/song')
+                          .then(res => {
+                            return res.body.slice(-1)[0]
+                          })
+
+    return request(app)
+            .delete('/api/v2/song/'+song.id)
+            .set('Authorization', token)
+            .expect(200)
+  })
 })
