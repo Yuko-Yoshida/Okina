@@ -34,9 +34,13 @@
           <div class="card-content">
             <div class="content">
               Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
-              <a href="#">@bulmaio</a>. <a href="#">#css</a> <a href="#">#responsive</a>
-              <br>
             </div>
+          </div>
+          <div v-if='isAdmin'>
+            <footer class="card-footer">
+              <a class="button is-primary">Edit</a>
+              <a class="button is-danger">Delete</a>
+            </footer>
           </div>
         </div>
       </div>
@@ -79,7 +83,8 @@ export default {
       title: '',
       artist: '',
       album: '',
-      date: ''
+      date: '',
+      isAdmin: (this.$cookies.get('token')) ? true : false
     }
   },
   asyncData: function({ $axios }) {
