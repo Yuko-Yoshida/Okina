@@ -16,21 +16,18 @@
     <div class="columns">
       <div class="column is-two-thirds">
         <no-ssr>
-          <div v-for="music in songInfos">
-            <aplayer
-              preload="matadata"
-              :music='music'
-            />
-          </div>
+          <aplayer
+            preload="matadata"
+            :music='songInfos[0]'
+            :list='songInfos'
+            listMaxHeight="5"
+            @canplay="getCurrentSong"
+            ref="player"
+          />
         </no-ssr>
       </div>
       <div class="column">
         <div class="card">
-          <div class="card-image">
-            <figure class="image is-4by3">
-              <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
-            </figure>
-          </div>
           <div class="card-content">
             <div class="media">
               <div class="media-left">
@@ -62,6 +59,11 @@
 import Aplayer from 'vue-aplayer'
 
 export default {
+  data: function() {
+    return {
+      currentId: ''
+    }
+  },
   asyncData: function({ $axios }) {
     return $axios.$get('http://localhost:3000/api/v2/song')
     .then((res) => {
@@ -77,18 +79,15 @@ export default {
       return { songInfos: songInfos }
     })
   },
-  data: function () {
-    return {
-      music: {
-        title: 'test',
-        artist: '',
-        src: '',
-        pic: '',
-      },
-    }
-  },
   components: {
     Aplayer
+  },
+  methods: {
+    getCurrentSong: function() {
+      const src = this.$refs.player.$refs.audio.currentSrc
+      const id = src.split('/')
+      this.id = id[6]
+    }
   }
 }
 </script>
