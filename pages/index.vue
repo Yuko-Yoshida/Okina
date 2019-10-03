@@ -15,16 +15,18 @@
     </nav>
     <div class="columns">
       <div class="column is-two-thirds">
-        <no-ssr>
-          <aplayer
-            preload="matadata"
-            :music='songInfos[0]'
-            :list='songInfos'
-            listMaxHeight="5"
-            @canplay="getCurrentSong"
-            ref="player"
-          />
-        </no-ssr>
+        <div v-if='songInfos.length > 0'>
+          <client-only>
+            <aplayer
+              preload="matadata"
+              :music='songInfos[0]'
+              :list='songInfos'
+              listMaxHeight="5"
+              @canplay="onSongChange"
+              ref="player"
+            />
+          </client-only>
+        </div>
         <div class="card">
           <header class="card-header">
             <p class="card-header-title">
@@ -39,7 +41,7 @@
           <div v-if='isAdmin'>
             <footer class="card-footer">
               <a class="button is-primary">Edit</a>
-              <a class="button is-danger">Delete</a>
+              <a class="button is-danger" v-on:click="deleteSong">Delete</a>
             </footer>
           </div>
         </div>
@@ -76,6 +78,22 @@
 <script>
 import Aplayer from 'vue-aplayer'
 
+function getSongs($axios) {
+  return $axios.$get('http://localhost:3000/api/v2/song')
+  .then((res) => {
+    const songInfos = res.map((song) => {
+      return {
+        artist: song.artist,
+        title: song.title,
+        album: song.album,
+        pic: 'http://localhost:3000/api/v2/song/'+song.id+'/artwork',
+        src: 'http://localhost:3000/api/v2/song/'+song.id+'/audio'
+      }
+    })
+    return songInfos
+  })
+}
+
 export default {
   data: function() {
     return {
@@ -84,23 +102,14 @@ export default {
       artist: '',
       album: '',
       date: '',
-      isAdmin: (this.$cookies.get('token')) ? true : false
+      isAdmin: (this.$cookies.get('token')) ? true : false,
+      token: this.$cookies.get('token')
     }
   },
-  asyncData: function({ $axios }) {
-    return $axios.$get('http://localhost:3000/api/v2/song')
-    .then((res) => {
-      const songInfos = res.map((song) => {
-        return {
-          artist: song.artist,
-          title: song.title,
-          album: song.album,
-          pic: 'http://localhost:3000/api/v2/song/'+song.id+'/artwork',
-          src: 'http://localhost:3000/api/v2/song/'+song.id+'/audio'
-        }
-      })
-      return { songInfos: songInfos }
-    })
+  asyncData: async function({ $axios }) {
+    return {
+      songInfos: await getSongs($axios)
+    }
   },
   components: {
     Aplayer
@@ -109,8 +118,7 @@ export default {
     getCurrentSong: function() {
       const src = this.$refs.player.$refs.audio.currentSrc
       const id = src.split('/')
-      this.currentId = id[6]
-      this.getSongInfo(this.currentId)
+      return id[6]
     },
     getSongInfo: function(id) {
       return this.$axios.$get('http://localhost:3000/api/v2/song/'+id)
@@ -120,6 +128,21 @@ export default {
                 this.album = res.album
                 this.date = res.date
               })
+    },
+    deleteSong: function() {
+      let id = this.getCurrentSong()
+      this.$axios.setToken(this.token)
+      return this.$axios.$delete('http://localhost:3000/api/v2/song/'+id)
+              .then(async () => {
+                this.songInfos = await getSongs(this.$axios)
+                id = this.getCurrentSong()
+                this.getSongInfo(id)
+              })
+    },
+    onSongChange: function() {
+      const id = this.getCurrentSong()
+      this.currentId = id
+      return this.getSongInfo(id)
     }
   }
 }
