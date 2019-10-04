@@ -215,8 +215,12 @@ routerAuth.delete('/:id', (req, res) => {
     return Model('Song').deleteOne({ _id: id }, (err) => {
       if (err) return res.status(400).send()
 
-      fs.unlinkSync(__dirname+'/uploads/'+filename)
-      if (artwork) fs.unlinkSync(__dirname+'/uploads/'+artwork)
+      if (filename && fs.existsSync(__dirname+'/uploads/'+filename)) {
+        fs.unlinkSync(__dirname+'/uploads/'+filename)
+      }
+      if (artwork && fs.existsSync(__dirname+'/uploads/'+artwork)) {
+        fs.unlinkSync(__dirname+'/uploads/'+artwork)
+      }
 
       return res.status(200).send()
     })
