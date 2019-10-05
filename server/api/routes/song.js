@@ -33,6 +33,7 @@ router.get('/', (req, res) => {
         artist: song.artist,
         title: song.title,
         album: song.album,
+        description: song.description,
         artwork: song.artwork,
         filename: song.filename,
         date: song.date
@@ -52,6 +53,7 @@ router.get('/:id', (req, res) => {
       artist: song.artist,
       title: song.title,
       album: song.album,
+      description: song.description,
       artwork: song.artwork,
       filename: song.filename,
       date: song.date
@@ -134,6 +136,7 @@ routerAuth.post('/upload', (req, res) => {
       artist: body.artist,
       title: body.title,
       album: body.album,
+      description: body.description,
       artwork: artwork,
       filename: req.files.song[0].filename
     }
@@ -169,6 +172,7 @@ routerAuth.put('/:id', (req, res) => {
       const artist = (body.artist) ? body.artist : song.artist
       const title = (body.title) ? body.title : song.title
       const album = (body.album) ? body.album : song.album
+      const description = (body.description) ? body.description : song.description
       const artwork = (req.files.artwork) ? req.files.artwork[0].filename : song.artwork
       const filename = (req.files.song) ? req.files.song[0].filename : song.filename
 
