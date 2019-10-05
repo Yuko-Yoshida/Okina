@@ -11,6 +11,15 @@
               <button class="button is-denger" v-on:click="del(index)">
                 Delete
               </button>
+              <button class="button" v-on:click="swap(index, index-1)" v-if='index > 0'>
+                Up
+              </button>
+              <button
+                class="button"
+                v-on:click="swap(index, index+1)"
+                v-if='index < musics.length-1'>
+                Down
+              </button>
             </div>
             <div class="field">
               <button class="button is-success" v-on:click="upload">
@@ -53,8 +62,15 @@ export default {
       })
     },
     del: function(index) {
-      console.log(index);
       this.musics.splice(index, 1)
+    },
+    swap: function(from, to) {
+      const temp = this.musics[to]
+      this.musics[to] = this.musics[from]
+      this.musics[from] = temp
+      // update array
+      this.musics.push({})
+      this.musics.pop({})
     },
     artwork: function(e) {
       e.preventDefault();

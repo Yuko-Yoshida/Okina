@@ -38,16 +38,6 @@
 
 <script>
   export default {
-    // data() {
-    //   return {
-    //     music: {
-    //       title: '',
-    //       artist: '',
-    //       description: '',
-    //       file: ''
-    //     }
-    //   }
-    // },
     props: ['music'],
     computed: {
       title: {
