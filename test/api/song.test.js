@@ -48,6 +48,7 @@ describe('api/song.js', () => {
     const songInfo = {
       artist: 'test4',
       title: 'test4',
+      description: 'test4',
       album: 'album4'
     }
 
@@ -67,6 +68,7 @@ describe('api/song.js', () => {
     const songInfo = {
       artist: 'test4',
       title: 'test4',
+      description: 'test4',
       album: 'album4'
     }
 
@@ -86,6 +88,7 @@ describe('api/song.js', () => {
     const songInfo = {
       artist: 'test4',
       title: 'test4',
+      description: 'test4',
       album: 'album4'
     }
 
@@ -104,6 +107,7 @@ describe('api/song.js', () => {
     const songInfo = {
       artist: 'test4',
       title: 'test4',
+      description: 'test4',
       album: 'album4'
     }
 
@@ -146,6 +150,7 @@ describe('api/song.js', () => {
     const songInfo = {
       artist: 'test40',
       title: 'test40',
+      description: 'test40',
       album: 'album40'
     }
 
@@ -171,6 +176,7 @@ describe('api/song.js', () => {
     const songInfo = {
       artist: 'test40',
       title: 'test40',
+      description: 'test40',
       album: 'album40'
     }
 
@@ -196,6 +202,7 @@ describe('api/song.js', () => {
     const songInfo = {
       artist: 'test404',
       title: 'test404',
+      description: 'test404',
       album: 'album404'
     }
 
