@@ -39,6 +39,12 @@
                 </div>
               </div>
               <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                  <textarea class="textarea" rows="5" v-model="description"></textarea>
+                </div>
+              </div>
+              <div class="field">
                 <div class="file">
                   <label class="file-label">
                     <label class="label">Artwork</label>
@@ -90,6 +96,14 @@ export default {
         this.$store.commit('singleUpload/updateArtist', value)
       }
     },
+    description: {
+      get: function () {
+        return this.$store.state.singleUpload.description
+      },
+      set: function (value) {
+        this.$store.commit('singleUpload/updateDescription', value)
+      }
+    },
     album: {
       get: function () {
         return this.$store.state.singleUpload.album
@@ -116,12 +130,14 @@ export default {
       const song = this.$store.state.singleUpload.song
       const title = this.$store.state.singleUpload.title
       const artist = this.$store.state.singleUpload.artist
+      const description = this.$store.state.singleUpload.description
       const album = this.$store.state.singleUpload.album
       const artwork = this.$store.state.singleUpload.artwork
 
       const songInfo = {
         title: title,
         artist: artist,
+        description: description,
         album: album
       }
       const formData = new FormData()
