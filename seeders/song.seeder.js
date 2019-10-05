@@ -7,6 +7,7 @@ const data = [
     artist: 'artist1',
     title: 'title1',
     album: 'album1',
+    description: 'desc1',
     artwork: 'artwork1.png',
     filepath: 'hoge/huga1.wav'
   },
@@ -14,6 +15,7 @@ const data = [
     artist: 'artist2',
     title: 'title2',
     album: '',
+    description: '',
     artwork: '',
     filepath: 'hoge/huga2.wav'
   },
@@ -21,6 +23,7 @@ const data = [
     artist: 'artist3',
     title: 'title3',
     album: 'album3',
+    description: 'desc3',
     artwork: 'artwork3.png',
     filepath: 'hoge/huga3.wav'
   },
