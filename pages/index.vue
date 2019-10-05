@@ -50,12 +50,10 @@
               {{ artist }}, {{ album }}, {{ desc }}, {{ date }}
             </div>
           </div>
-          <div v-if='isAdmin'>
-            <footer class="card-footer" id="songConf">
-              <a class="button is-primary">Edit</a>
-              <a class="button is-danger" v-on:click="deleteSong">Delete</a>
-            </footer>
-          </div>
+          <footer class="card-footer" id="songConf" v-if='isAdmin'>
+            <a class="button is-primary">Edit</a>
+            <a class="button is-danger" v-on:click="deleteSong">Delete</a>
+          </footer>
         </div>
       </div>
       <div class="column">
@@ -80,6 +78,10 @@
               <br>
               <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
             </div>
+
+            <footer class="card-footer" id="songConf" v-if='isAdmin'>
+              <a class="button is-primary">Edit</a>
+            </footer>
           </div>
         </div>
       </div>
