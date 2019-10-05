@@ -50,7 +50,11 @@ export default {
         {
           title: 0
         }
-      ]
+      ],
+      artwork: '',
+      album: 'test444',
+      description: '',
+      artist: 'test444'
     }
   },
   methods: {
@@ -74,16 +78,16 @@ export default {
     },
     artwork: function(e) {
       e.preventDefault();
-      let files = e.target.files;
-      this.$store.commit('singleUpload/updateArtwork', files[0])
+      let files = e.target.files
+      this.artwork = files[0]
     },
-    upload: async function() {
-      const song = this.$store.state.singleUpload.song
-      const title = this.$store.state.singleUpload.title
-      const artist = this.$store.state.singleUpload.artist
-      const description = this.$store.state.singleUpload.description
-      const album = this.$store.state.singleUpload.album
-      const artwork = this.$store.state.singleUpload.artwork
+    uploadSong: async function(music) {
+      const song = music.file
+      const title = music.title
+      const artist = music.artist
+      const description = music.description
+      const artwork = this.artwork
+      const album = this.album
 
       const songInfo = {
         title: title,
@@ -101,6 +105,27 @@ export default {
       this.$axios.setHeader('Content-Type', 'multipart/form-data')
       this.$axios.setToken(token)
       const res = await this.$axios.$post('http://localhost:3000/api/v2/song/upload', formData)
+
+      return res.id
+    },
+    upload: async function() {
+      const promises = this.musics.map(music => this.uploadSong(music))
+      const ids = await Promise.all(promises)
+
+      const albumInfo = {
+        title: this.album,
+        artist: this.artist,
+        description: this.description,
+        songs: ids
+      }
+      const formData = new FormData()
+      formData.append('albumInfo', JSON.stringify(albumInfo))
+      formData.append('artwork', this.artwork)
+
+      const token = this.token
+      this.$axios.setHeader('Content-Type', 'multipart/form-data')
+      this.$axios.setToken(token)
+      const res = await this.$axios.$post('http://localhost:3000/api/v2/album/upload', formData)
     }
   }
 }
