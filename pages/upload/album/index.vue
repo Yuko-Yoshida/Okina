@@ -8,6 +8,9 @@
               <form class="box">
                 <Uploader :music='musics[index]'/>
               </form>
+              <button class="button is-denger" v-on:click="del(index)">
+                Delete
+              </button>
             </div>
             <div class="field">
               <button class="button is-success" v-on:click="upload">
@@ -36,7 +39,7 @@ export default {
       token: this.$cookies.get('token'),
       musics: [
         {
-          title: 'test'
+          title: 0
         }
       ]
     }
@@ -49,8 +52,11 @@ export default {
         description: ''
       })
     },
+    del: function(index) {
+      console.log(index);
+      this.musics.splice(index, 1)
+    },
     artwork: function(e) {
-      console.log(e);
       e.preventDefault();
       let files = e.target.files;
       this.$store.commit('singleUpload/updateArtwork', files[0])

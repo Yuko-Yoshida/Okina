@@ -74,13 +74,13 @@
           this.music.description = value
         }
       },
-      methods: {
-        song: function(e) {
-          e.preventDefault();
-          let files = e.target.files
-          this.music.file = files[0]
-        },
-      }
     },
+    methods: {
+      song: function(e) {
+        e.preventDefault();
+        let files = e.target.files
+        this.music.file = files[0]
+      },
+    }
   }
 </script>
