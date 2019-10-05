@@ -6,11 +6,23 @@
           <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: Free, open source, & modern CSS framework based on Flexbox" width="112" height="28">
         </a>
 
-        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false">
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-          <span aria-hidden="true"></span>
-        </a>
+        <div class="navbar-end" v-if='isAdmin'>
+          <div class="navbar-item has-dropdown is-hoverable">
+            <a class="navbar-link">
+              Upload
+            </a>
+
+            <div class="navbar-dropdown">
+              <a class="navbar-item" href="/upload/single">
+                Single
+              </a>
+              <a class="navbar-item" href="/upload/album">
+                Album
+              </a>
+            </div>
+          </div>
+        </div>
+
       </div>
     </nav>
     <div class="columns">
@@ -18,28 +30,28 @@
         <div v-if='songInfos.length > 0'>
           <client-only>
             <aplayer
-              preload="matadata"
-              :music='songInfos[0]'
-              :list='songInfos'
-              listMaxHeight="5"
-              @canplay="onSongChange"
-              ref="player"
+            preload="matadata"
+            :music='songInfos[0]'
+            :list='songInfos'
+            listMaxHeight="5"
+            @canplay="onSongChange"
+            ref="player"
             />
           </client-only>
         </div>
-        <div class="card">
-          <header class="card-header">
+        <div class="card" id="songInfo">
+          <header class="card-header" id="songTitle">
             <p class="card-header-title">
               {{ title }}
             </p>
           </header>
-          <div class="card-content">
+          <div class="card-content" id="songDesc">
             <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus nec iaculis mauris.
+              {{ artist }}, {{ album }}, {{ desc }}, {{ date }}
             </div>
           </div>
           <div v-if='isAdmin'>
-            <footer class="card-footer">
+            <footer class="card-footer" id="songConf">
               <a class="button is-primary">Edit</a>
               <a class="button is-danger" v-on:click="deleteSong">Delete</a>
             </footer>
@@ -102,6 +114,7 @@ export default {
       artist: '',
       album: '',
       date: '',
+      desc: '',
       isAdmin: (this.$cookies.get('token')) ? true : false,
       token: this.$cookies.get('token')
     }
@@ -122,22 +135,22 @@ export default {
     },
     getSongInfo: function(id) {
       return this.$axios.$get('http://localhost:3000/api/v2/song/'+id)
-              .then((res) => {
-                this.title = res.title
-                this.artist = res.artist
-                this.album = res.album
-                this.date = res.date
-              })
+      .then((res) => {
+        this.title = res.title
+        this.artist = res.artist
+        this.album = res.album
+        this.date = res.date
+      })
     },
     deleteSong: function() {
       let id = this.getCurrentSong()
       this.$axios.setToken(this.token)
       return this.$axios.$delete('http://localhost:3000/api/v2/song/'+id)
-              .then(async () => {
-                this.songInfos = await getSongs(this.$axios)
-                id = this.getCurrentSong()
-                this.getSongInfo(id)
-              })
+      .then(async () => {
+        this.songInfos = await getSongs(this.$axios)
+        id = this.getCurrentSong()
+        this.getSongInfo(id)
+      })
     },
     onSongChange: function() {
       const id = this.getCurrentSong()
@@ -149,5 +162,15 @@ export default {
 </script>
 
 <style>
+#songInfo {
+  /* bottom: 10px; */
+}
 
+#songTitle {
+
+}
+
+#songDesc {
+  height: auto;
+}
 </style>
