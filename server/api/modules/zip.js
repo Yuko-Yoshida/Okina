@@ -18,7 +18,7 @@ res.zip = function(files, filename, cb) {
   cb = cb || function() {}
 
   this.header('Content-Type', 'application/zip')
-  this.header('Content-Disposition', 'attachment; filename="' + filename + '"')
+  this.header('Content-Disposition', 'attachment; filename="' + filename + '.zip"')
 
   const zip = zipstream(exports.options)
   zip.pipe(this) // res is a writable stream

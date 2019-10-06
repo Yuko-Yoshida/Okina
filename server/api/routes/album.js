@@ -5,6 +5,9 @@ const Model = require('../models')
 const multer = require('multer')
 const fs = require('fs')
 const zip = require('../modules/zip')
+const ffmpeg = require('fluent-ffmpeg')
+const uuidv4 = require('uuid/v4')
+const NodeID3 = require('node-id3')
 
 
 const storage = multer.diskStorage({
@@ -19,6 +22,22 @@ const upload = multer({ storage: storage }).fields([
   { name: 'albumInfo', maxCount: 1 },
   { name: 'artwork', maxCount: 1 },
 ])
+
+
+function applyTags(file, info, cb) {
+  const tags = {
+    title: info.title,
+    artist: info.artist,
+    album: info.album,
+    APIC: info.artwork
+  }
+
+  return NodeID3.write(tags, file, (err, buffer) => {
+    if (err) cb(err, null)
+    cb(null, buffer)
+  })
+}
+
 
 router.get('/', (req, res) => {
   Model('Album').find({}, (err, albums) => {
@@ -60,15 +79,39 @@ router.get('/:id/download', (req, res) => {
     if (err) return res.status(400).send()
     if (!album) return res.status(400).send()
 
-    return Model('Song').find({ _id: album.songs }, (err, songs) => {
+    return Model('Song').find({ _id: album.songs }, async (err, songs) => {
       if (err) return res.status(400).send()
       if (!songs) return res.status(400).send()
       if (album.songs.length !== songs.length) return res.status(400).send()
 
-      const zipFile = songs.map((song) => {
+      const toMp3 = (song) => {
+        return new Promise((resolve, reject) => {
+          const tmpname = __dirname+'/uploads/'+song.filename+uuidv4()
+          ffmpeg(__dirname+'/uploads/'+song.filename)
+            .output(tmpname)
+            .audioBitrate('320k')
+            .audioChannels(2)
+            .audioCodec('libmp3lame')
+            .format('mp3')
+            .on('error', (err) => reject(err))
+            .on('end', () => {
+              const buffer = fs.readFileSync(tmpname)
+              applyTags(buffer, song, (err, file) => {
+                if (err) reject(err)
+                fs.unlinkSync(tmpname)
+                resolve({ title: song.title, file: file })
+              })
+            })
+            .run()
+        })
+      }
+      const promises = songs.map(song => toMp3(song))
+      const mp3s = await Promise.all(promises)
+
+      const zipFile = mp3s.map((song) => {
         return {
-          name: song.title+'.wav',
-          data: fs.createReadStream(__dirname+'/uploads/'+song.filename)
+          name: song.title+'.mp3',
+          data: song.file
         }
       })
 
