@@ -6,6 +6,7 @@ const multer = require('multer')
 const fs = require('fs')
 const ffmpeg = require('fluent-ffmpeg')
 const uuidv4 = require('uuid/v4')
+const NodeID3 = require('node-id3')
 
 
 const storage = multer.diskStorage({
@@ -21,6 +22,21 @@ const upload = multer({ storage: storage }).fields([
   { name: 'songInfo', maxCount: 1 },
   { name: 'artwork', maxCount: 1 },
 ])
+
+
+function applyTags(file, info, cb) {
+  const tags = {
+    title: info.title,
+    artist: info.artist,
+    album: info.album,
+    APIC: info.artwork
+  }
+
+  return NodeID3.write(tags, file, (err, buffer) => {
+    if (err) cb(err, null)
+    cb(null, buffer)
+  })
+}
 
 
 router.get('/', (req, res) => {
@@ -104,16 +120,28 @@ router.get('/:id/download', (req, res) => {
     if (err) return res.status(400).send()
     if (!song) return res.status(400).send()
 
-    res.set('Content-Type', 'audio/mp3')
-    res.set('Content-Disposition', 'attachment; filename="' + song.title + '.mp3"')
+    const tmpname = __dirname+'/uploads/'+song.filename+uuidv4()
 
     return ffmpeg(__dirname+'/uploads/'+song.filename)
+            .output(tmpname)
             .audioBitrate('320k')
             .audioChannels(2)
             .audioCodec('libmp3lame')
             .format('mp3')
             .on('error', (err) => res.status(400).send())
-            .pipe(res)
+            .on('end', () => {
+              res.set('Content-Type', 'audio/mp3')
+              res.set('Content-Disposition', 'attachment; filename="' + song.title + '.mp3"')
+
+              const buffer = fs.readFileSync(tmpname)
+              fs.unlinkSync(tmpname)
+
+              return applyTags(buffer, song, (err, file) => {
+                if (err) return res.status(400).send()
+                return res.status(200).send(file)
+              })
+            })
+            .run()
   })
 })
 
