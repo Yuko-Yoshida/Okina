@@ -43,7 +43,7 @@
               <form class="box">
                 <Uploader :music='musics[index]'/>
               </form>
-              <button class="button is-denger" v-on:click="del(index)">
+              <button class="button is-denger" v-on:click="del(index)" v-if='musics.length > 1'>
                 Delete
               </button>
               <button class="button" v-on:click="swap(index, index-1)" v-if='index > 0'>
