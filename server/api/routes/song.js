@@ -161,7 +161,13 @@ routerAuth.post('/upload', (req, res) => {
       artwork: artwork,
       filename: req.files.song[0].filename
     }
-    if (!songInfo.artist || !songInfo.title) return res.status(400).send()
+    const conditions = () => {
+      return songInfo.artist === '' ||
+             songInfo.title === '' ||
+             typeof songInfo.artist === 'undefined' ||
+             typeof songInfo.title === 'undefined'
+    }
+    if (conditions()) return res.status(400).send()
 
     return Model('Song').create(songInfo, (err, song) => {
       if (err) return res.status(400).send()
