@@ -62,6 +62,28 @@ describe('api/song.js', () => {
             .expect(200)
   })
 
+  test('upload song with artist is 0', async () => {
+    jest.setTimeout(20000);
+
+    const token = await getToken()
+
+    const songInfo = {
+      artist: '0',
+      title: 'test4',
+      description: 'test4',
+      album: 'album4'
+    }
+
+    return request(app)
+            .post('/api/v2/song/upload')
+            .set('Authorization', token)
+            .set('Content-Type', 'multipart/form-data')
+            .field('songInfo', JSON.stringify(songInfo))
+            .attach('song', __dirname+'/files/test.wav')
+            .attach('artwork', '')
+            .expect(200)
+  })
+
   test('upload song with artwork', async () => {
     const token = await getToken()
 
