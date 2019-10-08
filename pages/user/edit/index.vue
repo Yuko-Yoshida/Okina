@@ -31,15 +31,15 @@
                 </div>
               </div>
               <div class="field">
-                <label class="label">Current Password</label>
+                <label class="label">Current Password *</label>
                 <div class="control">
-                  <input type="text" class="input" v-model="currentPassword" required>
+                  <input type="password" class="input" v-model="currentPassword" required>
                 </div>
               </div>
               <div class="field">
                 <label class="label">New Password</label>
                 <div class="control">
-                  <input type="text" class="input" v-model="newPassword">
+                  <input type="password" class="input" v-model="newPassword">
                 </div>
               </div>
               <div class="field">
