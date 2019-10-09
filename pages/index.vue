@@ -66,21 +66,16 @@
                 </figure>
               </div>
               <div class="media-content">
-                <p class="title is-4">John Smith</p>
-                <p class="subtitle is-6">@johnsmith</p>
+                <p class="title is-4">{{ artistInfo.name }}</p>
               </div>
             </div>
 
             <div class="content">
-              Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-              Phasellus nec iaculis mauris. <a>@bulmaio</a>.
-              <a href="#">#css</a> <a href="#">#responsive</a>
-              <br>
-              <time datetime="2016-1-1">11:09 PM - 1 Jan 2016</time>
+              {{ artistInfo.description }}
             </div>
 
             <footer class="card-footer" id="songConf" v-if='isAdmin'>
-              <a class="button is-primary">Edit</a>
+              <a class="button is-primary" href="http://localhost:3000/user/edit">Edit</a>
             </footer>
           </div>
         </div>
@@ -123,7 +118,8 @@ export default {
   },
   asyncData: async function({ $axios }) {
     return {
-      songInfos: await getSongs($axios)
+      songInfos: await getSongs($axios),
+      artistInfo: await $axios.$get('http://localhost:3000/api/v2/artist')
     }
   },
   components: {
