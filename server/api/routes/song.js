@@ -207,6 +207,7 @@ routerAuth.put('/:id', (req, res) => {
         artist: artist,
         title: title,
         album: album,
+        description: description,
         artwork: artwork,
         filename: filename
       }
