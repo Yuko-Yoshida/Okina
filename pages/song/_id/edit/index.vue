@@ -59,6 +59,9 @@
 
 <script>
 export default {
+  validate({ params }) {
+    return /^[0-9a-f]{0,24}$/.test(params.id)
+  },
   async asyncData({ $axios, params }) {
     return {
       id: params.id,
