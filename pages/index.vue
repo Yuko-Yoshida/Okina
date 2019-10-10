@@ -51,7 +51,7 @@
             </div>
           </div>
           <footer class="card-footer" id="songConf" v-if='isAdmin'>
-            <a class="button is-primary">Edit</a>
+            <a class="button is-primary" v-bind:href="'http://localhost:3000/song/'+currentId+'/edit'">Edit</a>
             <a class="button is-danger" v-on:click="deleteSong">Delete</a>
           </footer>
         </div>
@@ -105,7 +105,7 @@ function getSongs($axios) {
 
 export default {
   data: function() {
-    return {
+    const store = {
       currentId: '',
       title: '',
       artist: '',
@@ -115,6 +115,7 @@ export default {
       isAdmin: (this.$cookies.get('token')) ? true : false,
       token: this.$cookies.get('token')
     }
+    return store
   },
   asyncData: async function({ $axios }) {
     return {
