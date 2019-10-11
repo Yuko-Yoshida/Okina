@@ -50,9 +50,12 @@
               {{ artist }}, {{ album }}, {{ desc }}, {{ date }}
             </div>
           </div>
-          <footer class="card-footer" id="songConf" v-if='isAdmin'>
-            <a class="button is-primary" v-bind:href="'http://localhost:3000/song/'+currentId+'/edit'">Edit</a>
-            <a class="button is-danger" v-on:click="deleteSong">Delete</a>
+          <footer class="card-footer" id="songConf">
+            <div v-if='isAdmin'>
+              <a class="button is-primary" v-bind:href="'http://localhost:3000/song/'+currentId+'/edit'">Edit</a>
+              <a class="button is-danger" v-on:click="deleteSong">Delete</a>
+            </div>
+            <a class="button is-primary" v-bind:href="'http://localhost:3000/api/v2/song/'+currentId+'/download'">Download</a>
           </footer>
         </div>
       </div>
@@ -155,6 +158,9 @@ export default {
       const id = this.getCurrentSong()
       this.currentId = id
       return this.getSongInfo(id)
+    },
+    download: function() {
+      this.$axios.$get('http://localhost:3000/api/v2/song/'+this.currentId+'/download')
     }
   }
 }
