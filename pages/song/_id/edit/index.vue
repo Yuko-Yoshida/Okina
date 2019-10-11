@@ -65,7 +65,7 @@ export default {
   async asyncData({ $axios, params }) {
     return {
       id: params.id,
-      songInfo: await $axios.$get('http://localhost:3000/api/v2/song/'+params.id),
+      songInfo: await $axios.$get('/api/v2/song/'+params.id),
     }
   },
   data () {
@@ -127,7 +127,7 @@ export default {
       const token = this.token
       this.$axios.setHeader('Content-Type', 'multipart/form-data')
       this.$axios.setToken(token)
-      const res = await this.$axios.$put('http://localhost:3000/api/v2/song/'+this.id, formData)
+      const res = await this.$axios.$put('/api/v2/song/'+this.id, formData)
     }
   }
 }

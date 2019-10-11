@@ -77,7 +77,7 @@ export default {
       const email = this.email
       const password = this.password
       const retypePassword = this.retypePassword
-      const res = await this.$axios.$post('http://localhost:3000/api/v2/user/new', {
+      const res = await this.$axios.$post('/api/v2/user/new', {
         email: email, password: password, retypePassword: retypePassword
       })
       window.location.href = 'http://localhost:3000/'

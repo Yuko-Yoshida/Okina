@@ -149,7 +149,7 @@ export default {
 
       this.$axios.setHeader('Content-Type', 'multipart/form-data')
       this.$axios.setToken(token)
-      const res = await this.$axios.$post('http://localhost:3000/api/v2/song/upload', formData)
+      const res = await this.$axios.$post('/api/v2/song/upload', formData)
     }
   }
 }

@@ -67,7 +67,7 @@ export default {
     login: async function() {
       const email = this.$store.state.login.email
       const password = this.$store.state.login.password
-      const res = await this.$axios.$post('http://localhost:3000/api/v2/login', {
+      const res = await this.$axios.$post('/api/v2/login', {
         email: email, password: password
       })
       this.$cookies.set('token', res.token, {

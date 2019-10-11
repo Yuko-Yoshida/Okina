@@ -52,10 +52,10 @@
           </div>
           <footer class="card-footer" id="songConf">
             <div v-if='isAdmin'>
-              <a class="button is-primary" v-bind:href="'http://localhost:3000/song/'+currentId+'/edit'">Edit</a>
+              <a class="button is-primary" v-bind:href="API_URL+'/song/'+currentId+'/edit'">Edit</a>
               <a class="button is-danger" v-on:click="deleteSong">Delete</a>
             </div>
-            <a class="button is-primary" v-bind:href="'http://localhost:3000/api/v2/song/'+currentId+'/download'">Download</a>
+            <a class="button is-primary" v-bind:href="API_URL+'/api/v2/song/'+currentId+'/download'">Download</a>
           </footer>
         </div>
       </div>
@@ -78,7 +78,7 @@
             </div>
 
             <footer class="card-footer" id="songConf" v-if='isAdmin'>
-              <a class="button is-primary" href="http://localhost:3000/user/edit">Edit</a>
+              <a class="button is-primary" v-bind:href="API_URL+'/user/edit'">Edit</a>
             </footer>
           </div>
         </div>
@@ -91,15 +91,15 @@
 import Aplayer from 'vue-aplayer'
 
 function getSongs($axios) {
-  return $axios.$get('http://localhost:3000/api/v2/song')
+  return $axios.$get('/api/v2/song')
   .then((res) => {
     const songInfos = res.map((song) => {
       return {
         artist: song.artist,
         title: song.title,
         album: song.album,
-        pic: 'http://localhost:3000/api/v2/song/'+song.id+'/artwork',
-        src: 'http://localhost:3000/api/v2/song/'+song.id+'/audio'
+        pic: process.env.API_URL+'/api/v2/song/'+song.id+'/artwork',
+        src: process.env.API_URL+'/api/v2/song/'+song.id+'/audio'
       }
     })
     return songInfos
@@ -116,14 +116,15 @@ export default {
       date: '',
       desc: '',
       isAdmin: (this.$cookies.get('token')) ? true : false,
-      token: this.$cookies.get('token')
+      token: this.$cookies.get('token'),
+      API_URL: process.env.API_URL
     }
     return store
   },
   asyncData: async function({ $axios }) {
     return {
       songInfos: await getSongs($axios),
-      artistInfo: await $axios.$get('http://localhost:3000/api/v2/artist')
+      artistInfo: await $axios.$get('/api/v2/artist')
     }
   },
   components: {
@@ -136,7 +137,7 @@ export default {
       return id[6]
     },
     getSongInfo: function(id) {
-      return this.$axios.$get('http://localhost:3000/api/v2/song/'+id)
+      return this.$axios.$get('/api/v2/song/'+id)
       .then((res) => {
         this.title = res.title
         this.artist = res.artist
@@ -147,7 +148,7 @@ export default {
     deleteSong: function() {
       let id = this.getCurrentSong()
       this.$axios.setToken(this.token)
-      return this.$axios.$delete('http://localhost:3000/api/v2/song/'+id)
+      return this.$axios.$delete('/api/v2/song/'+id)
       .then(async () => {
         this.songInfos = await getSongs(this.$axios)
         id = this.getCurrentSong()
@@ -160,7 +161,7 @@ export default {
       return this.getSongInfo(id)
     },
     download: function() {
-      this.$axios.$get('http://localhost:3000/api/v2/song/'+this.currentId+'/download')
+      this.$axios.$get('/api/v2/song/'+this.currentId+'/download')
     }
   }
 }
