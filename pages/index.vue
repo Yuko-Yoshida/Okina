@@ -40,22 +40,18 @@
           </client-only>
         </div>
         <div class="card" id="songInfo">
-          <header class="card-header" id="songTitle">
-            <p class="card-header-title">
-              {{ title }}
-            </p>
-          </header>
           <div class="card-content" id="songDesc">
             <div class="content">
-              {{ artist }}, {{ album }}, {{ desc }}, {{ date }}
+              <p class="title is-4">{{ title }}</p>
+              {{ desc }}
             </div>
           </div>
           <footer class="card-footer" id="songConf">
             <div v-if='isAdmin'>
-              <a class="button is-primary" v-bind:href="API_URL+'/song/'+currentId+'/edit'">Edit</a>
+              <a class="button is-primary" v-if='currentId' v-bind:href="API_URL+'/song/'+currentId+'/edit'">Edit</a>
               <a class="button is-danger" v-on:click="deleteSong">Delete</a>
             </div>
-            <a class="button is-primary" v-bind:href="API_URL+'/api/v2/song/'+currentId+'/download'">Download</a>
+            <a class="button is-primary" v-if='currentId' v-bind:href="API_URL+'/api/v2/song/'+currentId+'/download'">Download</a>
           </footer>
         </div>
       </div>
@@ -143,6 +139,7 @@ export default {
         this.artist = res.artist
         this.album = res.album
         this.date = res.date
+        this.desc = res.description
       })
     },
     deleteSong: function() {
@@ -178,5 +175,7 @@ export default {
 
 #songDesc {
   height: auto;
+  white-space: pre-line;
+  word-wrap: break-word;
 }
 </style>

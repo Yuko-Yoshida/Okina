@@ -4,67 +4,67 @@
       <div class="container">
         <div class="columns is-5-tablet is-4-desktop is-3-widescreen">
           <div class="column">
-            <form class="box">
-              <div class="field">
-                <div class="file">
-                  <label class="file-label">
-                    <label class="label">Song *</label>
-                    <div class="control">
-                      <input class="file-input" type="file" name="resume" v-on:change="song">
-                      <span class="file-cta">
-                        <span class="file-label">
-                          Choose a file…
+            <div class="box">
+              <form>
+                <div class="field">
+                  <div class="file">
+                    <label class="file-label">
+                      <label class="label">Song *</label>
+                      <div class="control">
+                        <input class="file-input" type="file" v-on:change="song">
+                        <span class="file-cta">
+                          <span class="file-label">
+                            Choose a file…
+                          </span>
                         </span>
-                      </span>
-                    </div>
-                  </label>
+                      </div>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label class="label">Title *</label>
-                <div class="control">
-                  <input type="text" class="input" v-model="title" required>
+                <div class="field">
+                  <label class="label">Title *</label>
+                  <div class="control">
+                    <input type="text" class="input" v-model="title" required>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label class="label">Artist *</label>
-                <div class="control">
-                  <input type="text" class="input" v-model="artist" required>
+                <div class="field">
+                  <label class="label">Artist *</label>
+                  <div class="control">
+                    <input type="text" class="input" v-model="artist" required>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label class="label">Album</label>
-                <div class="control">
-                  <input type="text" class="input" v-model="album">
+                <div class="field">
+                  <label class="label">Album</label>
+                  <div class="control">
+                    <input type="text" class="input" v-model="album">
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label class="label">Description</label>
-                <div class="control">
-                  <textarea class="textarea" rows="5" v-model="description"></textarea>
+                <div class="field">
+                  <label class="label">Description</label>
+                  <div class="control">
+                    <textarea class="textarea" rows="5" v-model="description"></textarea>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <div class="file">
-                  <label class="file-label">
-                    <label class="label">Artwork</label>
-                    <div class="control">
-                      <input class="file-input" type="file" name="resume" v-on:change="artwork">
-                      <span class="file-cta">
-                        <span class="file-label">
-                          Choose a file…
+                <div class="field">
+                  <div class="file">
+                    <label class="file-label">
+                      <label class="label">Artwork</label>
+                      <div class="control">
+                        <input class="file-input" type="file" v-on:change="artwork">
+                        <span class="file-cta">
+                          <span class="file-label">
+                            Choose a file…
+                          </span>
                         </span>
-                      </span>
-                    </div>
-                  </label>
+                      </div>
+                    </label>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <button class="button is-success" v-on:click="upload">
-                  Upload
-                </button>
-              </div>
-            </form>
+              </form>
+              <button class="button is-success" v-on:click="upload">
+                Upload
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -76,7 +76,8 @@
 export default {
   data () {
     return {
-      token: this.$cookies.get('token')
+      token: this.$cookies.get('token'),
+      baseUrl: process.env.API_URL
     }
   },
   computed: {
@@ -126,7 +127,7 @@ export default {
       let files = e.target.files;
       this.$store.commit('singleUpload/updateArtwork', files[0])
     },
-    upload: async function() {
+    upload: function() {
       const song = this.$store.state.singleUpload.song
       const title = this.$store.state.singleUpload.title
       const artist = this.$store.state.singleUpload.artist
@@ -149,7 +150,9 @@ export default {
 
       this.$axios.setHeader('Content-Type', 'multipart/form-data')
       this.$axios.setToken(token)
-      const res = await this.$axios.$post('/api/v2/song/upload', formData)
+      return this.$axios.$post('/api/v2/song/upload', formData).then(() => {
+        window.location.href = this.baseUrl
+      })
     }
   }
 }

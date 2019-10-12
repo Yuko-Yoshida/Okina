@@ -56,14 +56,12 @@
                 Down
               </button>
             </div>
-            <div class="field">
-              <button class="button is-success" v-on:click="upload">
-                Upload
-              </button>
-              <button class="button" v-on:click="append">
-                Append
-              </button>
-            </div>
+            <button class="button is-success" v-on:click="upload">
+              Upload
+            </button>
+            <button class="button" v-on:click="append">
+              Append
+            </button>
           </div>
         </div>
       </div>
@@ -81,6 +79,7 @@ export default {
   data () {
     return {
       token: this.$cookies.get('token'),
+      baseUrl: process.env.API_URL,
       musics: [
         {
           title: 0
@@ -186,7 +185,9 @@ export default {
       const token = this.token
       this.$axios.setHeader('Content-Type', 'multipart/form-data')
       this.$axios.setToken(token)
-      const res = await this.$axios.$post('/api/v2/album/upload', formData)
+      return this.$axios.$post('/api/v2/album/upload', formData).then(() => {
+        window.location.href = this.baseUrl
+      })
     }
   }
 }
