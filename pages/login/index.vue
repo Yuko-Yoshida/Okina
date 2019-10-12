@@ -4,37 +4,37 @@
       <div class="container">
         <div class="columns is-centered">
           <div class="column is-5-tablet is-4-desktop is-3-widescreen">
-            <form action="" class="box">
-              <div class="field">
-                <label for="" class="label">Email</label>
-                <div class="control has-icons-left">
-                  <input type="email" placeholder="e.g. bobsmith@gmail.com" class="input" v-model="email" required>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-envelope"></i>
-                  </span>
+            <div class="box">
+              <form action="">
+                <div class="field">
+                  <label for="" class="label">Email</label>
+                  <div class="control has-icons-left">
+                    <input type="email" placeholder="e.g. bobsmith@gmail.com" class="input" v-model="email" required>
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-envelope"></i>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label for="" class="label">Password</label>
-                <div class="control has-icons-left">
-                  <input type="password" placeholder="*******" class="input" v-model="password" required>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
-                  </span>
+                <div class="field">
+                  <label for="" class="label">Password</label>
+                  <div class="control has-icons-left">
+                    <input type="password" placeholder="*******" class="input" v-model="password" required>
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-lock"></i>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label for="" class="checkbox">
-                  <input type="checkbox">
-                 Remember me
-                </label>
-              </div>
-              <div>
-                <button class="button is-success" v-on:click="login">
-                  Login
-                </button>
-              </div>
-            </form>
+                <div class="field">
+                  <label for="" class="checkbox">
+                    <input type="checkbox">
+                   Remember me
+                  </label>
+                </div>
+              </form>
+              <button class="button is-success" v-on:click="login">
+                Login
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -45,6 +45,11 @@
 
 <script>
 export default {
+  data() {
+    return {
+      API_URL: process.env.API_URL
+    }
+  },
   computed: {
     email: {
       get: function () {
@@ -64,17 +69,18 @@ export default {
     }
   },
   methods: {
-    login: async function() {
+    login: function() {
       const email = this.$store.state.login.email
       const password = this.$store.state.login.password
-      const res = await this.$axios.$post('http://localhost:3000/api/v2/login', {
+      return this.$axios.$post('/api/v2/login', {
         email: email, password: password
+      }).then((res) => {
+        this.$cookies.set('token', res.token, {
+          path: '/',
+          maxAge: 60 * 60 * 24 * 7
+        })
+        window.location.href = this.API_URL
       })
-      this.$cookies.set('token', res.token, {
-        path: '/',
-        maxAge: 60 * 60 * 24 * 7
-      })
-      window.location.href = 'http://localhost:3000/'
     }
   }
 }

@@ -4,40 +4,40 @@
       <div class="container">
         <div class="columns is-centered">
           <div class="column is-5-tablet is-4-desktop is-3-widescreen">
-            <form action="" class="box">
-              <div class="field">
-                <label for="" class="label">Email</label>
-                <div class="control has-icons-left">
-                  <input type="email" placeholder="e.g. bobsmith@gmail.com" class="input" v-model="email" required>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-envelope"></i>
-                  </span>
+            <div class="box">
+              <form action="">
+                <div class="field">
+                  <label for="" class="label">Email</label>
+                  <div class="control has-icons-left">
+                    <input type="email" placeholder="e.g. bobsmith@gmail.com" class="input" v-model="email" required>
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-envelope"></i>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label for="" class="label">Password</label>
-                <div class="control has-icons-left">
-                  <input type="password" placeholder="*******" class="input" v-model="password" required>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
-                  </span>
+                <div class="field">
+                  <label for="" class="label">Password</label>
+                  <div class="control has-icons-left">
+                    <input type="password" placeholder="*******" class="input" v-model="password" required>
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-lock"></i>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div class="field">
-                <label for="" class="label">Retype Password</label>
-                <div class="control has-icons-left">
-                  <input type="password" placeholder="*******" class="input" v-model="retypePassword" required>
-                  <span class="icon is-small is-left">
-                    <i class="fa fa-lock"></i>
-                  </span>
+                <div class="field">
+                  <label for="" class="label">Retype Password</label>
+                  <div class="control has-icons-left">
+                    <input type="password" placeholder="*******" class="input" v-model="retypePassword" required>
+                    <span class="icon is-small is-left">
+                      <i class="fa fa-lock"></i>
+                    </span>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <button class="button is-success" v-on:click="create">
-                  Create
-                </button>
-              </div>
-            </form>
+              </form>
+              <button class="button is-success" v-on:click="create">
+                Create
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -52,7 +52,8 @@ export default {
     return {
       email: '',
       password: '',
-      retypePassword: ''
+      retypePassword: '',
+      API_URL: process.env.API_URL
     }
   },
   computed: {
@@ -73,14 +74,15 @@ export default {
     }
   },
   methods: {
-    create: async function() {
+    create: function() {
       const email = this.email
       const password = this.password
       const retypePassword = this.retypePassword
-      const res = await this.$axios.$post('http://localhost:3000/api/v2/user/new', {
+      return this.$axios.$post('/api/v2/user/new', {
         email: email, password: password, retypePassword: retypePassword
+      }).then(() => {
+        window.location.href = this.API_URL
       })
-      window.location.href = 'http://localhost:3000/'
     }
   }
 }

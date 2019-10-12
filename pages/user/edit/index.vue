@@ -59,7 +59,7 @@
 export default {
   async asyncData({ $axios }) {
     return {
-      artist: await $axios.$get('http://localhost:3000/api/v2/artist'),
+      artist: await $axios.$get('/api/v2/artist'),
     }
   },
   data () {
@@ -69,7 +69,8 @@ export default {
         email: '',
         currentPassword: '',
         newPassword: '',
-      }
+      },
+      API_URL: process.env.API_URL
     }
   },
   computed: {
@@ -123,7 +124,7 @@ export default {
 
       const token = this.token
       this.$axios.setToken(token)
-      const res = await this.$axios.$put('http://localhost:3000/api/v2/artist/', artistInfo)
+      const res = await this.$axios.$put('/api/v2/artist/', artistInfo)
     },
     updateUser: async function() {
       const userInfo = {
@@ -135,7 +136,7 @@ export default {
       const token = this.token
       this.$axios.setToken(token)
       this.$cookies.removeAll()
-      this.$axios.$put('http://localhost:3000/api/v2/user/', userInfo)
+      this.$axios.$put('/api/v2/user/', userInfo)
         .then(() => this.$cookies.removeAll())
     }
   }
