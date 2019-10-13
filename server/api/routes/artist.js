@@ -22,8 +22,8 @@ router.get('/', (req, res) => {
   Model('Artist').findOne({}, (err, artist) => {
     if (err) res.status(400).send()
 
-    const { name, description } = artist
-    res.status(200).json({ name, description })
+    const { name, description, avater } = artist
+    res.status(200).json({ name, description, avater })
   })
 })
 
@@ -47,13 +47,15 @@ routerAuth.post('/avater', (req, res) => {
     if (err) return res.status(400).send()
     if (!req.file) return res.status(400).send()
 
-    return Model('Artist').updateOne({ avater: req.file.filename }, (err) => {
+    return Model('Artist').findOne({}, (err, artist) => {
       if (err) return res.status(400).send()
-      return res.status(200).send()
+      return artist.updateOne({ avater: req.file.filename }, (err) => {
+        if (err) return res.status(400).send()
+        return res.status(200).send()
+      })
     })
   })
 })
-
 
 routerAuth.put('/', (req, res) => {
   const name = req.body.name
