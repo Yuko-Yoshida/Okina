@@ -6,7 +6,7 @@ const data = [
   {
     name: 'test',
     description: 'hogehgoe',
-    avater: 'test'
+    avatar: 'test'
   }
 ]
 

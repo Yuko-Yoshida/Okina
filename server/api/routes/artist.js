@@ -15,7 +15,7 @@ const storage = multer.diskStorage({
   }
 })
 
-const upload = multer({ storage: storage }).single('avater')
+const upload = multer({ storage: storage }).single('avatar')
 
 
 router.get('/', (req, res) => {
@@ -24,6 +24,16 @@ router.get('/', (req, res) => {
 
     const { name, description, avater } = artist
     res.status(200).json({ name, description, avater })
+  })
+})
+
+router.get('/avatar', (req, res) => {
+  Model('Artist').findOne({}, (err, artist) => {
+    if (err) res.status(400).send()
+
+    const avatar = artist.avatar
+    const avatarPath = __dirname+'/uploads/'+avatar
+    res.status(200).sendFile(avatarPath)
   })
 })
 
@@ -42,14 +52,14 @@ routerAuth.post('/new', (req, res) => {
   })
 })
 
-routerAuth.post('/avater', (req, res) => {
+routerAuth.post('/avatar', (req, res) => {
   upload(req, res, (err) => {
     if (err) return res.status(400).send()
     if (!req.file) return res.status(400).send()
 
     return Model('Artist').findOne({}, (err, artist) => {
       if (err) return res.status(400).send()
-      return artist.updateOne({ avater: req.file.filename }, (err) => {
+      return artist.updateOne({ avatar: req.file.filename }, (err) => {
         if (err) return res.status(400).send()
         return res.status(200).send()
       })

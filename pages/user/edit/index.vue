@@ -10,7 +10,7 @@
                   <label class="file-label">
                     <label class="label">Avater</label>
                     <div class="control">
-                      <input class="file-input" type="file" v-on:change="onAvater">
+                      <input class="file-input" type="file" v-on:change="onAvatar">
                       <span class="file-cta">
                         <span class="file-label">
                           Choose a file…
@@ -20,7 +20,7 @@
                   </label>
                 </div>
               </div>
-              <button class="button is-success" v-on:click="uploadAvater">
+              <button class="button is-success" v-on:click="uploadAvatar">
                 Upload
               </button>
               <div class="field">
@@ -88,7 +88,7 @@ export default {
         currentPassword: '',
         newPassword: '',
       },
-      avater: '',
+      avatar: '',
       API_URL: process.env.API_URL
     }
   },
@@ -135,16 +135,16 @@ export default {
     }
   },
   methods: {
-    onAvater: function(e) {
+    onAvatar: function(e) {
       e.preventDefault()
       let files = e.target.files
-      this.avater = files[0]
+      this.avatar = files[0]
     },
-    uploadAvater: function() {
+    uploadAvatar: function() {
       const formData = new FormData()
-      formData.append('avater', this.avater)
+      formData.append('avatar', this.avatar)
       this.$axios.setToken(this.token)
-      this.$axios.$post('/api/v2/artist/avater', formData)
+      this.$axios.$post('/api/v2/artist/avatar', formData)
     },
     updateArtist: async function() {
       const artistInfo = {
