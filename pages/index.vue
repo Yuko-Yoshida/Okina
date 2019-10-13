@@ -53,7 +53,7 @@
                       <figure class="image is-200x200">
                           <img
                             id="artwork"
-                            v-bind:src="API_URL+'/api/v2/song/'+currentId+'/artwork'"
+                            :src="artwork"
                             alt="Placeholder image"
                           >
                       </figure>
@@ -82,7 +82,7 @@
                   <div class="media-left">
                     <figure class="image is-48x48">
                       <img
-                        v-bind:src="API_URL+'/api/v2/artist/avatar'" 
+                        v-bind:src="API_URL+'/api/v2/artist/avatar'"
                         alt="Placeholder image"
                       >
                     </figure>
@@ -128,6 +128,12 @@ function getSongs($axios) {
   })
 }
 
+function hasArtwork($axios, currentId, API_URL) {
+  return $axios.$get('/api/v2/song/'+currentId+'/artwork')
+    .then(() => '/api/v2/song/'+currentId+'/artwork')
+    .catch(err => API_URL+'/api/v2/artist/avatar')
+}
+
 export default {
   data: function() {
     return {
@@ -137,6 +143,7 @@ export default {
       album: '',
       date: '',
       desc: '',
+      artwork: '',
       isAdmin: (this.$cookies.get('token')) ? true : false,
       token: this.$cookies.get('token'),
       API_URL: process.env.API_URL
@@ -159,12 +166,13 @@ export default {
     },
     getSongInfo: function(id) {
       return this.$axios.$get('/api/v2/song/'+id)
-      .then((res) => {
+      .then(async (res) => {
         this.title = res.title
         this.artist = res.artist
         this.album = res.album
         this.date = res.date
         this.desc = res.description
+        this.artwork = await hasArtwork(this.$axios, this.currentId, this.API_URL)
       })
     },
     deleteSong: function() {
@@ -184,6 +192,11 @@ export default {
     },
     download: function() {
       this.$axios.$get('/api/v2/song/'+this.currentId+'/download')
+    },
+    hasArtwork: function() {
+      return this.$axios.$get('/api/v2/song/'+this.currentId+'/artwork')
+        .then(() => '/api/v2/song/'+this.currentId+'/artwork')
+        .catch(() => this.API_URL+'/api/v2/artist/avatar')
     }
   }
 }
