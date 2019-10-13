@@ -5,7 +5,8 @@ const Model = require('../server/api/models')
 const data = [
   {
     name: 'test',
-    description: 'hogehgoe'
+    description: 'hogehgoe',
+    avater: 'test'
   }
 ]
 
