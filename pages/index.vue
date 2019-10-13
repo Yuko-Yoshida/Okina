@@ -1,86 +1,109 @@
 <template>
-  <div class="container">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-        <a class="navbar-item" href="https://bulma.io">
-          <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: Free, open source, & modern CSS framework based on Flexbox" width="112" height="28">
-        </a>
+  <section class="hero is-fullheight">
+    <div class="hero-head">
+      <nav class="navbar" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+          <a class="navbar-item" href="https://bulma.io">
+            <img src="https://bulma.io/images/bulma-logo.png" alt="Bulma: Free, open source, & modern CSS framework based on Flexbox" width="112" height="28">
+          </a>
 
-        <div class="navbar-end" v-if='isAdmin'>
-          <div class="navbar-item has-dropdown is-hoverable">
-            <a class="navbar-link">
-              Upload
-            </a>
-
-            <div class="navbar-dropdown">
-              <a class="navbar-item" href="/upload/single">
-                Single
+          <div class="navbar-end" v-if='isAdmin'>
+            <div class="navbar-item has-dropdown is-hoverable">
+              <a class="navbar-link">
+                Upload
               </a>
-              <a class="navbar-item" href="/upload/album">
-                Album
-              </a>
-            </div>
-          </div>
-        </div>
 
-      </div>
-    </nav>
-    <div class="columns">
-      <div class="column is-two-thirds">
-        <div v-if='songInfos.length > 0'>
-          <client-only>
-            <aplayer
-            preload="matadata"
-            :music='songInfos[0]'
-            :list='songInfos'
-            listMaxHeight="5"
-            @canplay="onSongChange"
-            ref="player"
-            />
-          </client-only>
-        </div>
-        <div class="card" id="songInfo">
-          <div class="card-content" id="songDesc">
-            <div class="content">
-              <p class="title is-4">{{ title }}</p>
-              {{ desc }}
-            </div>
-          </div>
-          <footer class="card-footer" id="songConf">
-            <div v-if='isAdmin'>
-              <a class="button is-primary" v-if='currentId' v-bind:href="API_URL+'/song/'+currentId+'/edit'">Edit</a>
-              <a class="button is-danger" v-on:click="deleteSong">Delete</a>
-            </div>
-            <a class="button is-primary" v-if='currentId' v-bind:href="API_URL+'/api/v2/song/'+currentId+'/download'">Download</a>
-          </footer>
-        </div>
-      </div>
-      <div class="column">
-        <div class="card">
-          <div class="card-content">
-            <div class="media">
-              <div class="media-left">
-                <figure class="image is-48x48">
-                  <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
-                </figure>
-              </div>
-              <div class="media-content">
-                <p class="title is-4">{{ artistInfo.name }}</p>
+              <div class="navbar-dropdown">
+                <a class="navbar-item" href="/upload/single">
+                  Single
+                </a>
+                <a class="navbar-item" href="/upload/album">
+                  Album
+                </a>
               </div>
             </div>
+          </div>
 
-            <div class="content">
-              {{ artistInfo.description }}
+        </div>
+      </nav>
+    </div>
+
+    <div class="hero-body">
+      <div class="container">
+        <div class="columns">
+          <div class="column is-two-thirds">
+            <div v-if='songInfos.length > 0'>
+              <client-only>
+                <aplayer
+                preload="matadata"
+                :music='songInfos[0]'
+                :list='songInfos'
+                :listMaxHeight="'5'"
+                @canplay="onSongChange"
+                ref="player"
+                />
+              </client-only>
             </div>
+            <div class="card" id="songInfo">
+              <div class="card-content" id="songDesc">
+                <div class="content">
+                  <p class="title is-4">{{ artist }} - {{ title }}</p>
+                  <div class="columns">
+                    <div class="column is-one-third">
+                      <figure class="image is-200x200">
+                          <img
+                            id="artwork"
+                            v-bind:src="API_URL+'/api/v2/song/'+currentId+'/artwork'"
+                            alt="Placeholder image"
+                          >
+                      </figure>
+                    </div>
+                    <div class="column">
+                      <div id="desc">
+                        {{ desc }}
+                      </div>
+                      <a class="button is-primary" v-if='currentId' v-bind:href="API_URL+'/api/v2/song/'+currentId+'/download'">Download</a>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <footer class="card-footer" id="songConf">
+                <div v-if='isAdmin'>
+                  <a class="button is-primary" v-if='currentId' v-bind:href="API_URL+'/song/'+currentId+'/edit'">Edit</a>
+                  <a class="button is-danger" v-on:click="deleteSong">Delete</a>
+                </div>
+              </footer>
+            </div>
+          </div>
+          <div class="column">
+            <div class="card">
+              <div class="card-content">
+                <div class="media">
+                  <div class="media-left">
+                    <figure class="image is-48x48">
+                      <img src="https://bulma.io/images/placeholders/96x96.png" alt="Placeholder image">
+                    </figure>
+                  </div>
+                  <div class="media-content">
+                    <p class="title is-4">{{ artistInfo.name }}</p>
+                  </div>
+                </div>
 
-            <footer class="card-footer" id="songConf" v-if='isAdmin'>
-              <a class="button is-primary" v-bind:href="API_URL+'/user/edit'">Edit</a>
-            </footer>
+                <div class="content">
+                  {{ artistInfo.description }}
+                </div>
+
+                <footer class="card-footer" id="songConf" v-if='isAdmin'>
+                  <a class="button is-primary" v-bind:href="API_URL+'/user/edit'">Edit</a>
+                </footer>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
+</section>
 </template>
 
 <script>
@@ -104,7 +127,7 @@ function getSongs($axios) {
 
 export default {
   data: function() {
-    const store = {
+    return {
       currentId: '',
       title: '',
       artist: '',
@@ -115,7 +138,6 @@ export default {
       token: this.$cookies.get('token'),
       API_URL: process.env.API_URL
     }
-    return store
   },
   asyncData: async function({ $axios }) {
     return {
@@ -165,16 +187,13 @@ export default {
 </script>
 
 <style>
-#songInfo {
-  /* bottom: 10px; */
-}
-
-#songTitle {
-
-}
 
 #songDesc {
-  height: auto;
+  margin: auto;
+  height: 40vh;
+}
+
+#desc {
   white-space: pre-line;
   word-wrap: break-word;
 }
