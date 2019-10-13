@@ -6,6 +6,24 @@
           <div class="column">
             <form class="box">
               <div class="field">
+                <div class="file">
+                  <label class="file-label">
+                    <label class="label">Avater</label>
+                    <div class="control">
+                      <input class="file-input" type="file" v-on:change="onAvater">
+                      <span class="file-cta">
+                        <span class="file-label">
+                          Choose a file…
+                        </span>
+                      </span>
+                    </div>
+                  </label>
+                </div>
+              </div>
+              <button class="button is-success" v-on:click="uploadAvater">
+                Upload
+              </button>
+              <div class="field">
                 <label class="label">Artist Name</label>
                 <div class="control">
                   <input type="text" class="input" v-model="name">
@@ -70,6 +88,7 @@ export default {
         currentPassword: '',
         newPassword: '',
       },
+      avater: '',
       API_URL: process.env.API_URL
     }
   },
@@ -116,6 +135,17 @@ export default {
     }
   },
   methods: {
+    onAvater: function(e) {
+      e.preventDefault()
+      let files = e.target.files
+      this.avater = files[0]
+    },
+    uploadAvater: function() {
+      const formData = new FormData()
+      formData.append('avater', this.avater)
+      this.$axios.setToken(this.token)
+      this.$axios.$post('/api/v2/artist/avater', formData)
+    },
     updateArtist: async function() {
       const artistInfo = {
         name: this.artist.name,
