@@ -95,4 +95,14 @@ describe('api/artist.js', () => {
               assert(res.body.description, 'tewi')
             })
   })
+
+  test('POST avater', async () =>{
+    const token = await getToken()
+
+    return request(app)
+            .put('/api/v2/artist')
+            .attach('avater', __dirname+'/files/test.png')
+            .set('Authorization', token)
+            .expect(200)
+  })
 })

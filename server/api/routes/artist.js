@@ -2,7 +2,20 @@ const express = require('express')
 const router = express.Router()
 const routerAuth = express.Router()
 const Model = require('../models')
+const multer = require('multer')
+const fs = require('fs')
 const environment = process.env.NODE_ENV || 'development'
+
+
+const storage = multer.diskStorage({
+  destination: function(req, res, cb) {
+    const dist = __dirname+'/uploads'
+    if (!fs.existsSync(dist)) fs.mkdirSync(dist)
+    cb(null, dist)
+  }
+})
+
+const upload = multer({ storage: storage }).single('avater')
 
 
 router.get('/', (req, res) => {
@@ -28,6 +41,19 @@ routerAuth.post('/new', (req, res) => {
     })
   })
 })
+
+routerAuth.post('/avater', (req, res) => {
+  upload(req, res, (err) => {
+    if (err) return res.status(400).send()
+    if (!req.file) return res.status(400).send()
+
+    return Model('Artist').updateOne({ avater: req.file.filename }, (err) => {
+      if (err) return res.status(400).send()
+      return res.status(200).send()
+    })
+  })
+})
+
 
 routerAuth.put('/', (req, res) => {
   const name = req.body.name
